@@ -20,10 +20,15 @@ export default function NewMemberModal({ onClose }) {
     notes: "",
   });
 
+  const [ptOption, setPtOption] = useState("none");
   const [showPlansModal, setShowPlansModal] = useState(false);
   const [showTrainersModal, setShowTrainersModal] = useState(false);
 
   const selectedPlan = plans.find((p) => p.id === formData.planId) || plans[0] || { price: 1500, name: "Plan" };
+  const ptFee = ptOption === "pt-12" ? 4999 : ptOption === "pt-24" ? 8999 : 0;
+  const ptSessions = ptOption === "pt-12" ? 12 : ptOption === "pt-24" ? 24 : 0;
+  const ptPackageName = ptOption === "pt-12" ? "1-on-1 Personal Training (12 Sessions)" : ptOption === "pt-24" ? "Elite Transformation PT (24 Sessions)" : "";
+  const totalAdmissionFee = selectedPlan.price + ptFee;
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -32,7 +37,12 @@ export default function NewMemberModal({ onClose }) {
       return;
     }
 
-    addMember(formData);
+    addMember({
+      ...formData,
+      ptSessions,
+      ptFee,
+      ptPackageName,
+    });
     onClose();
   };
 
@@ -149,6 +159,25 @@ export default function NewMemberModal({ onClose }) {
             </div>
           </div>
 
+          {/* Personal Training Add-on Option */}
+          <div className="p-3 bg-neutral-950/80 border border-neutral-800 rounded-2xl space-y-1.5">
+            <div className="flex items-center justify-between">
+              <span className="text-[11px] font-black uppercase tracking-wider text-amber-400 block">
+                🏋️ Personal Training (PT) Package
+              </span>
+              <span className="text-[10px] text-neutral-400 font-bold">1-on-1 Coaching</span>
+            </div>
+            <select
+              value={ptOption}
+              onChange={(e) => setPtOption(e.target.value)}
+              className="w-full bg-neutral-900 border border-neutral-700 rounded-xl p-2.5 text-xs text-white outline-none focus:border-amber-500"
+            >
+              <option value="none">No PT Package (Standard Gym Access Only) — ₹0</option>
+              <option value="pt-12">⭐ 1-on-1 PT (12 Sessions with Coach) — +₹4,999</option>
+              <option value="pt-24">🏆 Elite Transformation PT (24 Sessions) — +₹8,999</option>
+            </select>
+          </div>
+
           {/* Nutrition & Training Assignment */}
           <div className="p-3 bg-neutral-950/80 border border-neutral-800 rounded-2xl space-y-2.5">
             <span className="text-[11px] font-black uppercase tracking-wider text-amber-400 block">
@@ -240,12 +269,24 @@ export default function NewMemberModal({ onClose }) {
           </div>
 
           {/* Amount Summary */}
-          <div className="bg-neutral-950 p-3 rounded-2xl border border-neutral-800 flex items-center justify-between text-xs">
-            <span className="text-neutral-400">Total Admission & Plan Fee:</span>
-            <span className="text-base font-black text-amber-400 flex items-center">
-              <IndianRupee className="w-4 h-4" />
-              <span>{selectedPlan.price.toLocaleString("en-IN")}</span>
-            </span>
+          <div className="bg-neutral-950 p-3.5 rounded-2xl border border-neutral-800 space-y-1.5 text-xs">
+            <div className="flex items-center justify-between text-neutral-400">
+              <span>Base Plan ({selectedPlan.name}):</span>
+              <span className="font-mono text-white font-bold">₹{selectedPlan.price.toLocaleString("en-IN")}</span>
+            </div>
+            {ptFee > 0 && (
+              <div className="flex items-center justify-between text-amber-400 font-bold">
+                <span>Personal Training ({ptSessions} Sessions):</span>
+                <span className="font-mono">+₹{ptFee.toLocaleString("en-IN")}</span>
+              </div>
+            )}
+            <div className="flex items-center justify-between pt-2 border-t border-neutral-800 font-black text-sm">
+              <span className="text-white">Total Admission Collection:</span>
+              <span className="text-base font-black text-amber-400 flex items-center">
+                <IndianRupee className="w-4 h-4" />
+                <span>{totalAdmissionFee.toLocaleString("en-IN")}</span>
+              </span>
+            </div>
           </div>
 
           <div className="flex items-center justify-end gap-2 pt-2 border-t border-neutral-800">

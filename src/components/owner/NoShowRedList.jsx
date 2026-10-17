@@ -11,12 +11,15 @@ import {
   User,
   Filter,
   Flame,
+  Eye,
 } from "lucide-react";
+import MemberProfileModal from "../modals/MemberProfileModal";
 
 export default function NoShowRedList({ onOpenFollowUpModal }) {
   const { members, settings, theme } = useGym();
   const [filterRange, setFilterRange] = useState("all"); // 'all' | '10-14' | '15-20' | '21+'
   const [copiedId, setCopiedId] = useState(null);
+  const [selectedProfileMember, setSelectedProfileMember] = useState(null);
 
   const isDark = theme === "dark";
   const threshold = settings.noShowThresholdDays || 10;
@@ -273,11 +276,28 @@ export default function NoShowRedList({ onOpenFollowUpModal }) {
                     <CheckCircle2 className="w-3.5 h-3.5" />
                     <span>Outcome</span>
                   </button>
+
+                  {/* View 360 Profile & Purchases */}
+                  <button
+                    onClick={() => setSelectedProfileMember(member)}
+                    className="flex items-center justify-center p-2.5 rounded-xl border border-amber-500/30 text-amber-500 hover:bg-amber-500/15 transition cursor-pointer shrink-0"
+                    title="View Athlete 360° Profile, Diet & Bills"
+                  >
+                    <Eye className="w-3.5 h-3.5" />
+                  </button>
                 </div>
               </div>
             );
           })}
         </div>
+      )}
+
+      {/* Member 360° Profile Modal */}
+      {selectedProfileMember && (
+        <MemberProfileModal
+          member={selectedProfileMember}
+          onClose={() => setSelectedProfileMember(null)}
+        />
       )}
     </div>
   );

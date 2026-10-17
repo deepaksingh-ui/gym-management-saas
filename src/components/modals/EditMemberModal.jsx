@@ -15,6 +15,7 @@ export default function EditMemberModal({ member, onClose }) {
     workoutSplitId: member.workoutSplitId || "none",
     expiryDate: member.expiryDate || "",
     weeklyGoalDays: member.weeklyGoalDays || 4,
+    ptBalance: member.ptBalance || 0,
     notes: member.notes || "",
   });
 
@@ -165,10 +166,10 @@ export default function EditMemberModal({ member, onClose }) {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <div>
               <label className="block text-xs font-semibold text-neutral-300 mb-1">
-                Membership Expiry Date:
+                Membership Expiry:
               </label>
               <input
                 type="date"
@@ -180,18 +181,31 @@ export default function EditMemberModal({ member, onClose }) {
 
             <div>
               <label className="block text-xs font-semibold text-neutral-300 mb-1">
-                Weekly Goal (Days/Week):
+                Weekly Goal:
               </label>
               <select
                 value={formData.weeklyGoalDays}
                 onChange={(e) => setFormData({ ...formData, weeklyGoalDays: Number(e.target.value) })}
                 className="w-full bg-neutral-950 border border-neutral-800 rounded-xl p-2.5 text-xs text-white outline-none focus:border-amber-500"
               >
-                <option value={3}>3 Days</option>
-                <option value={4}>4 Days</option>
-                <option value={5}>5 Days</option>
-                <option value={6}>6 Days</option>
+                <option value={3}>3 Days / Wk</option>
+                <option value={4}>4 Days / Wk</option>
+                <option value={5}>5 Days / Wk</option>
+                <option value={6}>6 Days / Wk</option>
               </select>
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-neutral-300 mb-1">
+                🏋️ PT Sessions Balance:
+              </label>
+              <input
+                type="number"
+                min="0"
+                value={formData.ptBalance}
+                onChange={(e) => setFormData({ ...formData, ptBalance: Number(e.target.value) })}
+                className="w-full bg-neutral-950 border border-neutral-800 rounded-xl p-2.5 text-xs text-amber-400 font-bold outline-none focus:border-amber-500 font-mono"
+              />
             </div>
           </div>
 

@@ -513,7 +513,7 @@ export function GymProvider({ children }) {
       lastCheckInTime: "Just joined",
       absentDays: 0,
       notes: newMemberData.notes || "New member",
-      ptBalance: 0,
+      ptBalance: Number(newMemberData.ptSessions) || Number(newMemberData.ptBalance) || 0,
     };
 
     setMembers((prev) => [fullMember, ...prev]);
@@ -525,18 +525,76 @@ export function GymProvider({ children }) {
       memberId: id,
       memberName: fullMember.name,
       amount: plan.price,
-      planName: plan.name,
+      planName: `${plan.name} (Membership Admission)`,
       date: todayStr,
       method: newMemberData.paymentMethod || "UPI",
       status: "Verified",
       receiptNo,
     };
-    setPayments((prev) => [newPayment, ...prev]);
+
+    // If PT package was bundled at admission, add its fee & payment record
+    if (newMemberData.ptFee && Number(newMemberData.ptFee) > 0) {
+      const ptReceipt = "REC-PT-" + Math.floor(1000 + Math.random() * 9000);
+      const ptPayment = {
+        id: "pay-pt-" + Date.now(),
+        memberId: id,
+        memberName: fullMember.name,
+        amount: Number(newMemberData.ptFee),
+        planName: newMemberData.ptPackageName || `1-on-1 Personal Training (${newMemberData.ptSessions} Sessions)`,
+        date: todayStr,
+        method: newMemberData.paymentMethod || "UPI",
+        status: "Verified",
+        receiptNo: ptReceipt,
+      };
+      setPayments((prev) => [ptPayment, newPayment, ...prev]);
+    } else {
+      setPayments((prev) => [newPayment, ...prev]);
+    }
 
     return fullMember;
   };
 
-  // 6. Pause / Unpause Membership
+  // 6. Deduct 1 PT session when completed
+  const deductPtSession = (memberId) => {
+    let success = false;
+    setMembers((prev) =>
+      prev.map((m) => {
+        if (m.id === memberId && (m.ptBalance || 0) > 0) {
+          success = true;
+          return { ...m, ptBalance: m.ptBalance - 1 };
+        }
+        return m;
+      })
+    );
+    return success;
+  };
+
+  // 7. Add PT Sessions & generate bill
+  const addPtSessions = (memberId, sessions = 12, fee = 4999, paymentMethod = "UPI") => {
+    const member = members.find((m) => m.id === memberId);
+    if (!member) return null;
+
+    setMembers((prev) =>
+      prev.map((m) => (m.id === memberId ? { ...m, ptBalance: (m.ptBalance || 0) + sessions } : m))
+    );
+
+    const receiptNo = "REC-PT-" + Math.floor(1000 + Math.random() * 9000);
+    const newPayment = {
+      id: "pay-" + Date.now(),
+      memberId: member.id,
+      memberName: member.name,
+      amount: fee,
+      planName: `1-on-1 Personal Training (+${sessions} Sessions)`,
+      date: todayStr,
+      method: paymentMethod,
+      status: "Verified",
+      receiptNo,
+    };
+    setPayments((prev) => [newPayment, ...prev]);
+    return { success: true, payment: newPayment };
+  };
+
+  // 8. Pause / Unpause Membership
   const togglePauseMember = (memberId, reason = "") => {
     setMembers((prev) =>
       prev.map((m) => {
@@ -657,6 +715,8 @@ export function GymProvider({ children }) {
         deleteAddOn,
         restockAddOn,
         addMember,
+        deductPtSession,
+        addPtSessions,
         togglePauseMember,
         bulkImportMembers,
         clearAllMembers,

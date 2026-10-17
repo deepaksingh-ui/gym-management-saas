@@ -730,10 +730,20 @@ export const INITIAL_CHECKINS = [
 ];
 
 export const INITIAL_PAYMENTS = [
-  { id: "pay-801", memberId: "mem-101", amount: 3999, planName: "Quarterly Transformation", date: daysAgo(45), method: "UPI", status: "Verified", receiptNo: "REC-2026-101" },
+  // Aman Sharma (mem-101) full purchase history
+  { id: "pay-801", memberId: "mem-101", amount: 3999, planName: "Quarterly Transformation (Membership)", date: daysAgo(45), method: "UPI (Google Pay)", status: "Verified", receiptNo: "REC-2026-101" },
+  { id: "pay-801a", memberId: "mem-101", amount: 4999, planName: "1-on-1 Personal Training (12 Sessions)", date: daysAgo(35), method: "UPI (PhonePe)", status: "Verified", receiptNo: "REC-SUPP-9481" },
+  { id: "pay-801b", memberId: "mem-101", amount: 2699, planName: "FitZone Gold 100% Whey Protein (1kg)", date: daysAgo(20), method: "Cash at Desk", status: "Verified", receiptNo: "REC-SUPP-3214" },
+  { id: "pay-801c", memberId: "mem-101", amount: 999, planName: "Customized Macro & Calorie Diet Plan", date: daysAgo(40), method: "UPI (Paytm)", status: "Verified", receiptNo: "REC-SUPP-1982" },
+
+  // Other members
   { id: "pay-802", memberId: "mem-104", amount: 3999, planName: "Quarterly Transformation", date: daysAgo(87), method: "Google Pay", status: "Verified", receiptNo: "REC-2026-087" },
   { id: "pay-803", memberId: "mem-106", amount: 12999, planName: "Annual Elite Champion", date: daysAgo(120), method: "Card", status: "Verified", receiptNo: "REC-2026-042" },
   { id: "pay-804", memberId: "mem-108", amount: 7499, planName: "Half-Yearly Shred", date: daysAgo(30), method: "PhonePe", status: "Verified", receiptNo: "REC-2026-115" },
+  { id: "pay-804a", memberId: "mem-108", amount: 799, planName: "Micronized Creatine Monohydrate (250g)", date: daysAgo(15), method: "Cash", status: "Verified", receiptNo: "REC-SUPP-5512" },
   { id: "pay-805", memberId: "mem-118", amount: 12999, planName: "Annual Elite Champion", date: daysAgo(200), method: "UPI", status: "Verified", receiptNo: "REC-2026-011" },
+  { id: "pay-805a", memberId: "mem-118", amount: 8999, planName: "Elite Transformation PT (24 Sessions)", date: daysAgo(90), method: "Card", status: "Verified", receiptNo: "REC-SUPP-7721" },
+  { id: "pay-806", memberId: "mem-115", amount: 12999, planName: "Annual Elite Champion", date: daysAgo(180), method: "UPI", status: "Verified", receiptNo: "REC-2026-019" },
+  { id: "pay-807", memberId: "mem-105", amount: 7499, planName: "Half-Yearly Shred", date: daysAgo(174), method: "Google Pay", status: "Verified", receiptNo: "REC-2026-024" },
 ];
 

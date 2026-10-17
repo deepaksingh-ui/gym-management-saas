@@ -14,8 +14,10 @@ import {
   Upload,
   Edit2,
   Dumbbell,
+  Eye,
 } from "lucide-react";
 import EditMemberModal from "../modals/EditMemberModal";
+import MemberProfileModal from "../modals/MemberProfileModal";
 
 export default function MemberList() {
   const { members, plans, processCheckIn, togglePauseMember, setActiveModal, setActiveInvoice, payments, theme } = useGym();
@@ -23,6 +25,7 @@ export default function MemberList() {
   const [statusFilter, setStatusFilter] = useState("all");
   const [actionMsg, setActionMsg] = useState("");
   const [editingMember, setEditingMember] = useState(null);
+  const [selectedProfileMember, setSelectedProfileMember] = useState(null);
 
   const isDark = theme === "dark";
 
@@ -164,15 +167,19 @@ export default function MemberList() {
 
                   return (
                     <tr key={member.id} className={`transition ${isDark ? "hover:bg-slate-800/40" : "hover:bg-slate-50"}`}>
-                      <td className="py-3.5 px-4">
+                      <td
+                        className="py-3.5 px-4 cursor-pointer group"
+                        onClick={() => setSelectedProfileMember(member)}
+                        title="Click to view full athlete profile, diet & purchases"
+                      >
                         <div className="flex items-center gap-3">
                           <img
                             src={member.avatar}
                             alt={member.name}
-                            className={`w-10 h-10 rounded-2xl object-cover border ${isDark ? "border-slate-700" : "border-slate-200 shadow-sm"}`}
+                            className={`w-10 h-10 rounded-2xl object-cover border transition group-hover:scale-105 ${isDark ? "border-slate-700" : "border-slate-200 shadow-sm"}`}
                           />
                           <div>
-                            <div className={`font-black flex items-center gap-2 ${isDark ? "text-white" : "text-slate-900"}`}>
+                            <div className={`font-black flex items-center gap-2 transition group-hover:text-amber-500 ${isDark ? "text-white" : "text-slate-900"}`}>
                               <span>{member.name}</span>
                               {member.absentDays >= 10 && member.status === "active" && (
                                 <span className="text-[10px] bg-red-500/20 text-red-600 dark:text-red-400 border border-red-500/30 px-1.5 py-0.2 rounded font-black">
@@ -187,7 +194,10 @@ export default function MemberList() {
                         </div>
                       </td>
 
-                      <td className="py-3.5 px-4">
+                      <td
+                        className="py-3.5 px-4 cursor-pointer"
+                        onClick={() => setSelectedProfileMember(member)}
+                      >
                         <div className={`font-bold ${isDark ? "text-white" : "text-slate-900"}`}>{plan?.name || "Standard Plan"}</div>
                         <div className={`text-[11px] ${isDark ? "text-slate-500" : "text-slate-500"}`}>
                           {member.ptBalance ? `🏋️ ${member.ptBalance} PT sessions left` : "General Gym Floor"}
@@ -230,6 +240,14 @@ export default function MemberList() {
 
                       <td className="py-3.5 px-4 text-right">
                         <div className="flex items-center justify-end gap-1.5">
+                          <button
+                            onClick={() => setSelectedProfileMember(member)}
+                            className="bg-amber-500/15 hover:bg-amber-500/25 text-amber-600 dark:text-amber-400 border border-amber-500/30 p-2 rounded-xl text-xs font-black shadow-sm transition cursor-pointer"
+                            title="View Athlete 360° Profile, Diet, Workout & Purchase History"
+                          >
+                            <Eye className="w-3.5 h-3.5" />
+                          </button>
+
                           <button
                             onClick={() => handleQuickCheckin(member)}
                             className="bg-emerald-500 hover:bg-emerald-400 text-black p-2 rounded-xl text-xs font-black shadow-sm transition cursor-pointer"
@@ -283,6 +301,15 @@ export default function MemberList() {
         <EditMemberModal
           member={editingMember}
           onClose={() => setEditingMember(null)}
+        />
+      )}
+
+      {/* Member 360° Profile & Billing History Modal */}
+      {selectedProfileMember && (
+        <MemberProfileModal
+          member={selectedProfileMember}
+          onClose={() => setSelectedProfileMember(null)}
+          onEdit={(m) => setEditingMember(m)}
         />
       )}
     </div>
