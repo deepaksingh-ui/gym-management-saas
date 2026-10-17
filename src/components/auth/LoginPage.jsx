@@ -232,20 +232,23 @@ export default function LoginPage() {
           )}
         </div>
 
-        {/* Counter Tablet Shortcut */}
-        <div className="text-center pt-1">
-          <button
-            onClick={() => setCurrentView("kiosk")}
-            className={`text-xs inline-flex items-center gap-2 font-bold px-4 py-2.5 rounded-2xl border transition cursor-pointer shadow-sm ${
-              isDark
-                ? "bg-slate-900 border-slate-800 text-slate-300 hover:text-white hover:bg-slate-800"
-                : "bg-white border-slate-200 text-slate-700 hover:text-slate-900 hover:bg-slate-50"
-            }`}
-          >
-            <QrCode className="w-4 h-4 text-amber-500" />
-            <span>Open Counter Reception QR Screen</span>
-          </button>
-        </div>
+        {/* Counter Tablet Shortcut (Only visible to Gym Staff / Owner tab, NEVER to members) */}
+        {activeTab === "admin" && (
+          <div className="text-center pt-1 animate-in fade-in duration-200">
+            <button
+              type="button"
+              onClick={() => setCurrentView("kiosk")}
+              className={`text-xs inline-flex items-center gap-2 font-bold px-4 py-2.5 rounded-2xl border transition cursor-pointer shadow-sm ${
+                isDark
+                  ? "bg-slate-900 border-slate-800 text-slate-300 hover:text-white hover:bg-slate-800"
+                  : "bg-white border-slate-200 text-slate-700 hover:text-slate-900 hover:bg-slate-50"
+              }`}
+            >
+              <QrCode className="w-4 h-4 text-amber-500" />
+              <span>Launch Reception Counter Tablet Screen</span>
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Security Footer */}
