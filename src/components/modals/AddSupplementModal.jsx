@@ -221,3 +221,4 @@ export default function AddSupplementModal({ onClose }) {
     </div>
   );
 }
+

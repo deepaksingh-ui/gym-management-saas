@@ -1,0 +1,19 @@
+{
+  "short_name": "FitZone Gym",
+  "name": "FitZone — Gym Retention & Management",
+  "description": "Your VIP digital gym pass, instant QR attendance, supplements, and workout streaks.",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "type": "image/svg+xml",
+      "sizes": "192x192 512x512 any",
+      "purpose": "any maskable"
+    }
+  ],
+  "start_url": "/",
+  "background_color": "#09090b",
+  "theme_color": "#10b981",
+  "display": "standalone",
+  "orientation": "portrait",
+  "scope": "/"
+}
