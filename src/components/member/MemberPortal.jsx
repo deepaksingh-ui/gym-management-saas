@@ -22,6 +22,7 @@ import {
   Apple,
   MessageSquare,
   Utensils,
+  Phone,
 } from "lucide-react";
 import UpiPaymentModal from "../modals/UpiPaymentModal";
 
@@ -282,6 +283,103 @@ export default function MemberPortal() {
                 </div>
               </div>
 
+              {/* 1-on-1 Personal Training Active Badge Card */}
+              {member.ptBalance && member.ptBalance > 0 ? (
+                <div className={`p-4 rounded-3xl border-2 transition-all shadow-md ${
+                  isDark
+                    ? "bg-gradient-to-br from-amber-950/40 via-slate-900 to-slate-950 border-amber-500/50"
+                    : "bg-gradient-to-br from-amber-50 via-orange-50/50 to-white border-amber-400"
+                }`}>
+                  <div className="flex items-center justify-between mb-2.5">
+                    <div className="flex items-center gap-2">
+                      <span className="w-2.5 h-2.5 rounded-full bg-amber-500 animate-ping" />
+                      <span className="text-[10px] font-black uppercase tracking-widest text-amber-500 bg-amber-500/15 border border-amber-500/30 px-2.5 py-0.5 rounded-full">
+                        ⭐ 1-on-1 Personal Training Active
+                      </span>
+                    </div>
+                    <span className="text-xs font-black text-amber-500 bg-black/40 px-2.5 py-1 rounded-full border border-amber-500/30">
+                      {member.ptBalance} Sessions Left
+                    </span>
+                  </div>
+
+                  <div className="flex items-center justify-between gap-3">
+                    <div className="flex items-center gap-2.5">
+                      <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center text-lg font-black text-black shadow-md shrink-0">
+                        🏋️
+                      </div>
+                      <div>
+                        <span className={`text-[10px] font-bold block ${isDark ? "text-slate-400" : "text-slate-500"}`}>
+                          Assigned Personal Coach
+                        </span>
+                        <div className={`text-sm font-black ${isDark ? "text-white" : "text-slate-900"}`}>
+                          {trainer ? trainer.name : "Vikram Chauhan"}
+                        </div>
+                        <span className="text-[10px] text-amber-500 font-semibold">
+                          {trainer ? trainer.specialty : "Hypertrophy & Strength"}
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-1.5 shrink-0">
+                      <a
+                        href={`https://wa.me/91${trainer ? trainer.phone.replace(/[^0-9]/g, "").slice(-10) : "9893011223"}?text=${encodeURIComponent(
+                          `Hi Coach ${trainer ? trainer.name : "Vikram"}, I am ${member.name} (Member ID: ${member.id}). I want to schedule my next PT session (${member.ptBalance} sessions remaining). Please confirm tomorrow's slot.`
+                        )}`}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="bg-emerald-500 hover:bg-emerald-400 text-black px-3 py-2 rounded-xl text-xs font-black flex items-center gap-1 shadow-sm transition"
+                        title="Book Session on WhatsApp"
+                      >
+                        <MessageSquare className="w-3.5 h-3.5" />
+                        <span>Book Slot</span>
+                      </a>
+                      <a
+                        href={`tel:${trainer ? trainer.phone : "+919893011223"}`}
+                        className={`p-2 rounded-xl border text-xs font-bold transition ${
+                          isDark ? "bg-slate-800 text-slate-300 border-slate-700 hover:text-white" : "bg-slate-100 text-slate-700 border-slate-300 hover:bg-slate-200"
+                        }`}
+                        title="Call Coach"
+                      >
+                        <Phone className="w-3.5 h-3.5" />
+                      </a>
+                    </div>
+                  </div>
+
+                  {/* Visual Sessions Progress Bar */}
+                  <div className="mt-3 pt-2.5 border-t border-amber-500/20 flex items-center justify-between text-[11px]">
+                    <span className={isDark ? "text-slate-400" : "text-slate-500"}>
+                      Coaching Progress:
+                    </span>
+                    <span className="font-bold text-amber-500">
+                      {Math.max(0, 12 - member.ptBalance)} / 12 completed ({member.ptBalance} remaining)
+                    </span>
+                  </div>
+                </div>
+              ) : (
+                /* If member doesn't have PT, show an invite pill */
+                <div
+                  onClick={() => setActiveTab("shop")}
+                  className={`p-3 rounded-2xl border border-dashed flex items-center justify-between text-xs cursor-pointer transition ${
+                    isDark ? "bg-slate-900/50 border-slate-800 hover:border-amber-500/40" : "bg-amber-50/40 border-amber-300 hover:bg-amber-50"
+                  }`}
+                >
+                  <div className="flex items-center gap-2">
+                    <span className="text-base">🏋️</span>
+                    <div>
+                      <span className={`font-bold block ${isDark ? "text-slate-300" : "text-slate-700"}`}>
+                        Want faster results? 1-on-1 Personal Training
+                      </span>
+                      <span className={`text-[10px] ${isDark ? "text-slate-500" : "text-slate-400"}`}>
+                        Form correction, customized workouts & dedicated coach
+                      </span>
+                    </div>
+                  </div>
+                  <span className="text-[10px] font-black bg-amber-500 text-black px-2.5 py-1 rounded-xl shrink-0">
+                    View PT Plans
+                  </span>
+                </div>
+              )}
+
               {/* Renewal Expiry Warning Banner if <= 7 days */}
               {daysLeft <= 7 && (
                 <div
@@ -440,6 +538,12 @@ export default function MemberPortal() {
                     Assigned by {trainer ? trainer.name : "FitZone Head Coach"}
                   </p>
                 </div>
+                {member.ptBalance > 0 && (
+                  <span className="text-[10px] font-black bg-amber-500/15 text-amber-500 border border-amber-500/30 px-2.5 py-1 rounded-full flex items-center gap-1">
+                    <span>⭐ PT Active</span>
+                    <span className="bg-amber-500 text-black px-1.5 py-0.5 rounded-full font-black text-[9px]">{member.ptBalance} left</span>
+                  </span>
+                )}
               </div>
 
               {/* Sub-Switch: Diet Plan vs Workout Routine */}

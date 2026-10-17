@@ -422,11 +422,25 @@ export function GymProvider({ children }) {
       );
     }
 
-    // If PT, increase member's ptBalance
+    // If PT, increase member's ptBalance & assign coach if missing
     if (item.type === "pt") {
-      const sessions = item.id.includes("24") ? 24 : 12;
+      let sessions = 12;
+      if (item.id.includes("24") || (item.name && item.name.includes("24"))) sessions = 24;
+      else if (item.name && item.name.includes("36")) sessions = 36;
+      else if (item.name && item.name.includes("8")) sessions = 8;
+      else if (item.name && item.name.includes("6")) sessions = 6;
+
       setMembers((prev) =>
-        prev.map((m) => (m.id === memberId ? { ...m, ptBalance: (m.ptBalance || 0) + sessions } : m))
+        prev.map((m) =>
+          m.id === memberId
+            ? {
+                ...m,
+                ptBalance: (m.ptBalance || 0) + sessions,
+                assignedTrainerId: m.assignedTrainerId || item.trainerId || "tr-1",
+                notes: (m.notes ? m.notes + " | " : "") + `${item.name} activated (+${sessions} sessions) on ${todayStr}`,
+              }
+            : m
+        )
       );
     }
 
