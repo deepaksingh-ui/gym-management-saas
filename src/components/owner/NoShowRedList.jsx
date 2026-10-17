@@ -80,61 +80,63 @@ export default function NoShowRedList({ onOpenFollowUpModal }) {
       </div>
 
       {/* Filter Tabs */}
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <div className={`flex items-center gap-1.5 p-1 rounded-2xl border ${
-          isDark ? "bg-slate-900 border-slate-800" : "bg-slate-100 border-slate-200"
-        }`}>
-          <button
-            onClick={() => setFilterRange("all")}
-            className={`px-3 py-1.5 rounded-xl text-xs font-black transition cursor-pointer ${
-              filterRange === "all"
-                ? "bg-red-500 text-white shadow-md shadow-red-500/20"
-                : isDark
-                ? "text-slate-400 hover:text-white"
-                : "text-slate-600 hover:text-slate-900"
-            }`}
-          >
-            All At Risk ({redListMembers.length})
-          </button>
-          <button
-            onClick={() => setFilterRange("10-14")}
-            className={`px-3 py-1.5 rounded-xl text-xs font-black transition cursor-pointer ${
-              filterRange === "10-14"
-                ? "bg-red-500 text-white shadow-md shadow-red-500/20"
-                : isDark
-                ? "text-slate-400 hover:text-white"
-                : "text-slate-600 hover:text-slate-900"
-            }`}
-          >
-            10–14 Days ({redListMembers.filter((m) => m.absentDays >= 10 && m.absentDays <= 14).length})
-          </button>
-          <button
-            onClick={() => setFilterRange("15-20")}
-            className={`px-3 py-1.5 rounded-xl text-xs font-black transition cursor-pointer ${
-              filterRange === "15-20"
-                ? "bg-red-500 text-white shadow-md shadow-red-500/20"
-                : isDark
-                ? "text-slate-400 hover:text-white"
-                : "text-slate-600 hover:text-slate-900"
-            }`}
-          >
-            15–20 Days ({redListMembers.filter((m) => m.absentDays >= 15 && m.absentDays <= 20).length})
-          </button>
-          <button
-            onClick={() => setFilterRange("21+")}
-            className={`px-3 py-1.5 rounded-xl text-xs font-black transition cursor-pointer ${
-              filterRange === "21+"
-                ? "bg-red-500 text-white shadow-md shadow-red-500/20"
-                : isDark
-                ? "text-slate-400 hover:text-white"
-                : "text-slate-600 hover:text-slate-900"
-            }`}
-          >
-            21+ Days Critical ({redListMembers.filter((m) => m.absentDays >= 21).length})
-          </button>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+        <div className="overflow-x-auto scrollbar-none -mx-3.5 px-3.5 sm:mx-0 sm:px-0">
+          <div className={`inline-flex items-center gap-1 sm:gap-1.5 p-1 rounded-2xl border min-w-max ${
+            isDark ? "bg-slate-900 border-slate-800" : "bg-slate-100 border-slate-200"
+          }`}>
+            <button
+              onClick={() => setFilterRange("all")}
+              className={`px-3 py-1.5 rounded-xl text-xs font-black transition cursor-pointer whitespace-nowrap ${
+                filterRange === "all"
+                  ? "bg-red-500 text-white shadow-md shadow-red-500/20"
+                  : isDark
+                  ? "text-slate-400 hover:text-white"
+                  : "text-slate-600 hover:text-slate-900"
+              }`}
+            >
+              All At Risk ({redListMembers.length})
+            </button>
+            <button
+              onClick={() => setFilterRange("10-14")}
+              className={`px-3 py-1.5 rounded-xl text-xs font-black transition cursor-pointer whitespace-nowrap ${
+                filterRange === "10-14"
+                  ? "bg-red-500 text-white shadow-md shadow-red-500/20"
+                  : isDark
+                  ? "text-slate-400 hover:text-white"
+                  : "text-slate-600 hover:text-slate-900"
+              }`}
+            >
+              10–14 Days ({redListMembers.filter((m) => m.absentDays >= 10 && m.absentDays <= 14).length})
+            </button>
+            <button
+              onClick={() => setFilterRange("15-20")}
+              className={`px-3 py-1.5 rounded-xl text-xs font-black transition cursor-pointer whitespace-nowrap ${
+                filterRange === "15-20"
+                  ? "bg-red-500 text-white shadow-md shadow-red-500/20"
+                  : isDark
+                  ? "text-slate-400 hover:text-white"
+                  : "text-slate-600 hover:text-slate-900"
+              }`}
+            >
+              15–20 Days ({redListMembers.filter((m) => m.absentDays >= 15 && m.absentDays <= 20).length})
+            </button>
+            <button
+              onClick={() => setFilterRange("21+")}
+              className={`px-3 py-1.5 rounded-xl text-xs font-black transition cursor-pointer whitespace-nowrap ${
+                filterRange === "21+"
+                  ? "bg-red-500 text-white shadow-md shadow-red-500/20"
+                  : isDark
+                  ? "text-slate-400 hover:text-white"
+                  : "text-slate-600 hover:text-slate-900"
+              }`}
+            >
+              21+ Days Critical ({redListMembers.filter((m) => m.absentDays >= 21).length})
+            </button>
+          </div>
         </div>
 
-        <span className={`text-xs font-bold ${isDark ? "text-slate-400" : "text-slate-500"}`}>
+        <span className={`text-[11px] sm:text-xs font-bold ${isDark ? "text-slate-400" : "text-slate-500"}`}>
           Showing <strong>{filtered.length}</strong> inactive members
         </span>
       </div>

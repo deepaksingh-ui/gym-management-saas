@@ -70,23 +70,23 @@ export default function OwnerDashboard({ onOpenFollowUpModal }) {
           </div>
 
           {/* Quick Counter Action Buttons */}
-          <div className="flex items-center gap-2">
+          <div className="grid grid-cols-2 sm:flex sm:items-center gap-2 w-full sm:w-auto">
             <button
               onClick={() => setActiveModal("assistedCheckin")}
-              className="flex items-center gap-1.5 bg-amber-500 hover:bg-amber-400 text-black px-4 py-2.5 rounded-xl text-xs font-black shadow-md shadow-amber-500/20 transition cursor-pointer"
+              className="flex items-center justify-center gap-1.5 bg-amber-500 hover:bg-amber-400 text-black px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl text-xs font-black shadow-md shadow-amber-500/20 transition cursor-pointer"
             >
-              <Zap className="w-4 h-4 fill-black" />
+              <Zap className="w-4 h-4 fill-black shrink-0" />
               <span>+ Quick Check-in</span>
             </button>
             <button
               onClick={() => setActiveModal("bulkImport")}
-              className={`flex items-center gap-1.5 px-3 py-2.5 rounded-xl text-xs font-bold border transition cursor-pointer ${
+              className={`flex items-center justify-center gap-1.5 px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl text-xs font-bold border transition cursor-pointer ${
                 isDark
                   ? "bg-slate-800 hover:bg-slate-700 text-slate-200 border-slate-700"
                   : "bg-white hover:bg-slate-50 text-slate-700 border-slate-300 shadow-sm"
               }`}
             >
-              <FileSpreadsheet className="w-4 h-4 text-emerald-500" />
+              <FileSpreadsheet className="w-4 h-4 text-emerald-500 shrink-0" />
               <span>Import Sheet</span>
             </button>
           </div>
@@ -94,46 +94,46 @@ export default function OwnerDashboard({ onOpenFollowUpModal }) {
       </div>
 
       {/* KPI Cards Row */}
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3.5 sm:gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2.5 sm:gap-4">
         {/* 1. Active Athletes */}
-        <div className={`rounded-2xl p-4 sm:p-5 border transition-all ${
+        <div className={`rounded-2xl p-3 sm:p-4.5 border transition-all ${
           isDark
             ? "bg-slate-900 border-slate-800 text-white"
             : "bg-white border-slate-200 text-slate-900 shadow-sm hover:shadow-md"
         }`}>
           <div className="flex items-center justify-between">
-            <span className={`text-xs font-bold uppercase tracking-wider ${isDark ? "text-slate-400" : "text-slate-600"}`}>
+            <span className={`text-[11px] sm:text-xs font-bold uppercase tracking-wider ${isDark ? "text-slate-400" : "text-slate-600"}`}>
               Active Athletes
             </span>
-            <div className="w-7 h-7 rounded-lg bg-amber-500/10 flex items-center justify-center text-amber-500 font-bold">
+            <div className="w-7 h-7 rounded-lg bg-amber-500/10 flex items-center justify-center text-amber-500 font-bold shrink-0">
               <Dumbbell className="w-4 h-4" />
             </div>
           </div>
-          <div className="mt-3">
-            <div className="text-3xl font-black">{activeMembers}</div>
-            <span className="text-[11px] text-emerald-600 dark:text-emerald-400 font-bold flex items-center gap-1 mt-0.5">
+          <div className="mt-2.5 sm:mt-3">
+            <div className="text-2xl sm:text-3xl font-black">{activeMembers}</div>
+            <span className="text-[10px] sm:text-[11px] text-emerald-600 dark:text-emerald-400 font-bold flex items-center gap-1 mt-0.5">
               <span>↑ +4 this week</span>
             </span>
           </div>
         </div>
 
         {/* 2. Today's Check-ins */}
-        <div className={`rounded-2xl p-4 sm:p-5 border transition-all ${
+        <div className={`rounded-2xl p-3 sm:p-4.5 border transition-all ${
           isDark
             ? "bg-slate-900 border-slate-800 text-white"
             : "bg-white border-slate-200 text-slate-900 shadow-sm hover:shadow-md"
         }`}>
           <div className="flex items-center justify-between">
-            <span className={`text-xs font-bold uppercase tracking-wider ${isDark ? "text-slate-400" : "text-slate-600"}`}>
+            <span className={`text-[11px] sm:text-xs font-bold uppercase tracking-wider ${isDark ? "text-slate-400" : "text-slate-600"}`}>
               Today's Entries
             </span>
-            <div className="w-7 h-7 rounded-lg bg-emerald-500/10 flex items-center justify-center text-emerald-500 font-bold">
+            <div className="w-7 h-7 rounded-lg bg-emerald-500/10 flex items-center justify-center text-emerald-500 font-bold shrink-0">
               <UserCheck className="w-4 h-4" />
             </div>
           </div>
-          <div className="mt-3">
-            <div className="text-3xl font-black text-emerald-600 dark:text-emerald-400">{todayCheckIns}</div>
-            <span className={`text-[11px] font-semibold ${isDark ? "text-slate-400" : "text-slate-600"}`}>
+          <div className="mt-2.5 sm:mt-3">
+            <div className="text-2xl sm:text-3xl font-black text-emerald-600 dark:text-emerald-400">{todayCheckIns}</div>
+            <span className={`text-[10px] sm:text-[11px] font-semibold ${isDark ? "text-slate-400" : "text-slate-600"}`}>
               via QR & Counter
             </span>
           </div>
@@ -142,21 +142,21 @@ export default function OwnerDashboard({ onOpenFollowUpModal }) {
         {/* 3. Red-List Silent Churn */}
         <div
           onClick={() => setActiveTab("redlist")}
-          className={`rounded-2xl p-4 sm:p-5 border-2 transition-all cursor-pointer group ${
+          className={`rounded-2xl p-3 sm:p-4.5 border-2 transition-all cursor-pointer group ${
             isDark
               ? "bg-red-950/30 border-red-500/50 hover:border-red-500 text-white"
               : "bg-red-50/70 border-red-300 hover:border-red-500 text-slate-900 shadow-sm"
           }`}
         >
           <div className="flex items-center justify-between text-red-600 dark:text-red-400">
-            <span className="text-xs font-black uppercase tracking-wider flex items-center gap-1">
+            <span className="text-[11px] sm:text-xs font-black uppercase tracking-wider flex items-center gap-1">
               <span>Dropout Risk</span>
             </span>
-            <AlertTriangle className="w-4 h-4 group-hover:scale-125 transition-transform" />
+            <AlertTriangle className="w-4 h-4 group-hover:scale-125 transition-transform shrink-0" />
           </div>
-          <div className="mt-3">
-            <div className="text-3xl font-black text-red-600 dark:text-red-400">{redListMembers}</div>
-            <span className="text-[11px] text-red-600 dark:text-red-300 font-bold underline">
+          <div className="mt-2.5 sm:mt-3">
+            <div className="text-2xl sm:text-3xl font-black text-red-600 dark:text-red-400">{redListMembers}</div>
+            <span className="text-[10px] sm:text-[11px] text-red-600 dark:text-red-300 font-bold underline">
               Recover Now &rarr;
             </span>
           </div>
@@ -165,48 +165,48 @@ export default function OwnerDashboard({ onOpenFollowUpModal }) {
         {/* 4. Renewals Due */}
         <div
           onClick={() => setActiveTab("renewals")}
-          className={`rounded-2xl p-4 sm:p-5 border transition-all cursor-pointer ${
+          className={`rounded-2xl p-3 sm:p-4.5 border transition-all cursor-pointer ${
             isDark
               ? "bg-slate-900 border-slate-800 hover:border-amber-500/50 text-white"
               : "bg-white border-slate-200 hover:border-amber-500 text-slate-900 shadow-sm"
           }`}
         >
           <div className="flex items-center justify-between">
-            <span className={`text-xs font-bold uppercase tracking-wider ${isDark ? "text-slate-400" : "text-slate-600"}`}>
+            <span className={`text-[11px] sm:text-xs font-bold uppercase tracking-wider ${isDark ? "text-slate-400" : "text-slate-600"}`}>
               Renewals (7d)
             </span>
-            <div className="w-7 h-7 rounded-lg bg-amber-500/10 flex items-center justify-center text-amber-500">
+            <div className="w-7 h-7 rounded-lg bg-amber-500/10 flex items-center justify-center text-amber-500 shrink-0">
               <RefreshCw className="w-4 h-4" />
             </div>
           </div>
-          <div className="mt-3">
-            <div className="text-3xl font-black text-amber-600 dark:text-amber-400">{expiringSoon}</div>
-            <span className="text-[11px] text-amber-600 dark:text-amber-300 font-semibold">
+          <div className="mt-2.5 sm:mt-3">
+            <div className="text-2xl sm:text-3xl font-black text-amber-600 dark:text-amber-400">{expiringSoon}</div>
+            <span className="text-[10px] sm:text-[11px] text-amber-600 dark:text-amber-300 font-semibold">
               Action Required
             </span>
           </div>
         </div>
 
         {/* 5. Total Collection */}
-        <div className={`rounded-2xl p-4 sm:p-5 border col-span-2 sm:col-span-1 transition-all ${
+        <div className={`rounded-2xl p-3 sm:p-4.5 border col-span-2 sm:col-span-1 transition-all ${
           isDark
             ? "bg-slate-900 border-slate-800 text-white"
             : "bg-white border-slate-200 text-slate-900 shadow-sm"
         }`}>
           <div className="flex items-center justify-between">
-            <span className={`text-xs font-bold uppercase tracking-wider ${isDark ? "text-slate-400" : "text-slate-600"}`}>
+            <span className={`text-[11px] sm:text-xs font-bold uppercase tracking-wider ${isDark ? "text-slate-400" : "text-slate-600"}`}>
               Month Inflow
             </span>
-            <div className="w-7 h-7 rounded-lg bg-emerald-500/10 flex items-center justify-center text-emerald-500">
+            <div className="w-7 h-7 rounded-lg bg-emerald-500/10 flex items-center justify-center text-emerald-500 shrink-0">
               <IndianRupee className="w-4 h-4" />
             </div>
           </div>
-          <div className="mt-3">
+          <div className="mt-2.5 sm:mt-3">
             <div className="text-2xl sm:text-3xl font-black flex items-center">
               <span className={`text-sm mr-0.5 ${isDark ? "text-slate-400" : "text-slate-600"}`}>{settings.currency}</span>
               <span>{(totalRevenue + 45000).toLocaleString("en-IN")}</span>
             </div>
-            <span className="text-[11px] text-emerald-600 dark:text-emerald-400 font-bold">
+            <span className="text-[10px] sm:text-[11px] text-emerald-600 dark:text-emerald-400 font-bold">
               Fees & Add-ons
             </span>
           </div>
@@ -214,10 +214,10 @@ export default function OwnerDashboard({ onOpenFollowUpModal }) {
       </div>
 
       {/* Main Tabs Navigation */}
-      <div className={`border-b flex items-center justify-between overflow-x-auto gap-4 transition-colors ${
+      <div className={`border-b overflow-x-auto scrollbar-none -mx-3.5 px-3.5 sm:mx-0 sm:px-0 transition-colors ${
         isDark ? "border-slate-800" : "border-slate-200"
       }`}>
-        <nav className="flex space-x-2 sm:space-x-4">
+        <nav className="flex space-x-1.5 sm:space-x-4 min-w-max pb-1 sm:pb-0">
           <button
             onClick={() => setActiveTab("redlist")}
             className={`py-3 px-3 text-xs sm:text-sm font-black border-b-2 flex items-center gap-2 transition cursor-pointer whitespace-nowrap ${
