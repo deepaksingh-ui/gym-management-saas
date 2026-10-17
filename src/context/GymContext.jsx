@@ -490,6 +490,8 @@ export function GymProvider({ children }) {
       expiryDate: expiryStr,
       status: "active",
       assignedTrainerId: newMemberData.assignedTrainerId || "tr-1",
+      dietPlanId: newMemberData.dietPlanId || "diet-hypertrophy",
+      workoutSplitId: newMemberData.workoutSplitId || "split-5day-hypertrophy",
       weeklyGoalDays: Number(newMemberData.weeklyGoalDays) || 4,
       streak: 1,
       totalVisits: 1,

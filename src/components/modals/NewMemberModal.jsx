@@ -5,7 +5,7 @@ import ManagePlansModal from "./ManagePlansModal";
 import ManageTrainersModal from "./ManageTrainersModal";
 
 export default function NewMemberModal({ onClose }) {
-  const { plans, trainers, addMember, settings } = useGym();
+  const { plans, trainers, dietPlans = [], workoutRoutines = [], addMember, settings } = useGym();
 
   const [formData, setFormData] = useState({
     name: "",
@@ -13,6 +13,8 @@ export default function NewMemberModal({ onClose }) {
     email: "",
     planId: plans[0]?.id || "plan-3m",
     assignedTrainerId: trainers[0]?.id || "none",
+    dietPlanId: dietPlans[0]?.id || "diet-hypertrophy",
+    workoutSplitId: workoutRoutines[0]?.id || "split-5day-hypertrophy",
     weeklyGoalDays: 4,
     paymentMethod: "UPI",
     notes: "",
@@ -144,6 +146,50 @@ export default function NewMemberModal({ onClose }) {
                   </option>
                 ))}
               </select>
+            </div>
+          </div>
+
+          {/* Nutrition & Training Assignment */}
+          <div className="p-3 bg-neutral-950/80 border border-neutral-800 rounded-2xl space-y-2.5">
+            <span className="text-[11px] font-black uppercase tracking-wider text-amber-400 block">
+              Nutrition & Workout Plan Assignment
+            </span>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label className="block text-xs font-semibold text-neutral-300 mb-1">
+                  🥗 Assigned Diet Plan
+                </label>
+                <select
+                  value={formData.dietPlanId}
+                  onChange={(e) => setFormData({ ...formData, dietPlanId: e.target.value })}
+                  className="w-full bg-neutral-900 border border-neutral-700 rounded-xl p-2.5 text-xs text-white outline-none focus:border-amber-500"
+                >
+                  <option value="none">No Diet Plan (Standard Guidance)</option>
+                  {dietPlans.map((d) => (
+                    <option key={d.id} value={d.id}>
+                      {d.name} ({d.calories})
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-neutral-300 mb-1">
+                  🏋️‍♂️ Assigned Workout Routine
+                </label>
+                <select
+                  value={formData.workoutSplitId}
+                  onChange={(e) => setFormData({ ...formData, workoutSplitId: e.target.value })}
+                  className="w-full bg-neutral-900 border border-neutral-700 rounded-xl p-2.5 text-xs text-white outline-none focus:border-amber-500"
+                >
+                  <option value="none">General Gym Routine</option>
+                  {workoutRoutines.map((w) => (
+                    <option key={w.id} value={w.id}>
+                      {w.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
             </div>
           </div>
 
