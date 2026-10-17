@@ -101,7 +101,7 @@ export default function MemberPortal() {
   };
 
   const handleBuyAddOn = (item) => {
-    const res = orderAddOn(member.id, item.id);
+    const res = orderAddOn(member.id, item.id, "UPI (Member App)");
     if (res.success) {
       alert(`🎉 ${item.name} order placed! Counter invoice generated.`);
     }

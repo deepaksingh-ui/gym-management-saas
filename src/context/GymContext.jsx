@@ -201,6 +201,41 @@ export function GymProvider({ children }) {
     );
   };
 
+  const addAddOn = (newAddOn) => {
+    const id = "addon-" + Date.now();
+    const created = {
+      id,
+      name: newAddOn.name,
+      type: newAddOn.type || "product",
+      category: newAddOn.category || "Supplements",
+      price: Number(newAddOn.price) || 0,
+      mrp: Number(newAddOn.mrp) || Number(newAddOn.price) || 0,
+      stock: Number(newAddOn.stock) || 10,
+      description: newAddOn.description || "Fitness supplement / protein product",
+      validityDays: Number(newAddOn.validityDays) || 0,
+    };
+    setAddOns((prev) => [created, ...prev]);
+    return created;
+  };
+
+  const updateAddOn = (id, updates) => {
+    setAddOns((prev) =>
+      prev.map((item) => (item.id === id ? { ...item, ...updates } : item))
+    );
+  };
+
+  const deleteAddOn = (id) => {
+    setAddOns((prev) => prev.filter((item) => item.id !== id));
+  };
+
+  const restockAddOn = (id, quantity = 5) => {
+    setAddOns((prev) =>
+      prev.map((item) =>
+        item.id === id ? { ...item, stock: (item.stock || 0) + quantity } : item
+      )
+    );
+  };
+
   // Periodic refresh for Kiosk QR Token (every 30 seconds for anti-screenshot integrity)
   useEffect(() => {
     const interval = setInterval(() => {
@@ -361,19 +396,19 @@ export function GymProvider({ children }) {
   };
 
   // 4. Order Add-On (PT, Diet, Supplements)
-  const orderAddOn = (memberId, addOnId) => {
+  const orderAddOn = (memberId, addOnId, paymentMethod = "UPI (Counter)") => {
     const member = members.find((m) => m.id === memberId);
     const item = addOns.find((a) => a.id === addOnId);
     if (!member || !item) return { success: false, message: "Invalid order" };
 
     if (item.stock !== undefined && item.stock <= 0) {
-      return { success: false, message: "This item is currently out of stock!" };
+      return { success: false, message: "This item is currently out of stock! Please restock." };
     }
 
     // Decrement stock
     if (item.stock !== undefined) {
       setAddOns((prev) =>
-        prev.map((a) => (a.id === addOnId ? { ...a, stock: a.stock - 1 } : a))
+        prev.map((a) => (a.id === addOnId ? { ...a, stock: Math.max(0, a.stock - 1) } : a))
       );
     }
 
@@ -385,7 +420,7 @@ export function GymProvider({ children }) {
       );
     }
 
-    const receiptNo = "REC-ADDON-" + Math.floor(1000 + Math.random() * 9000);
+    const receiptNo = "REC-SUPP-" + Math.floor(1000 + Math.random() * 9000);
     const newPayment = {
       id: "pay-" + Date.now(),
       memberId: member.id,
@@ -393,12 +428,14 @@ export function GymProvider({ children }) {
       amount: item.price,
       planName: item.name,
       date: todayStr,
-      method: "UPI (Online)",
+      method: paymentMethod,
       status: "Verified",
       receiptNo,
     };
 
     setPayments((prev) => [newPayment, ...prev]);
+    setActiveInvoice(newPayment);
+    setActiveModal("invoice");
 
     return {
       success: true,
@@ -569,6 +606,10 @@ export function GymProvider({ children }) {
         markFollowUp,
         renewMembership,
         orderAddOn,
+        addAddOn,
+        updateAddOn,
+        deleteAddOn,
+        restockAddOn,
         addMember,
         togglePauseMember,
         bulkImportMembers,
