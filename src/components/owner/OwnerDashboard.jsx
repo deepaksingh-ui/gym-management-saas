@@ -4,6 +4,7 @@ import NoShowRedList from "./NoShowRedList";
 import RenewalManager from "./RenewalManager";
 import AddOnManager from "./AddOnManager";
 import MemberList from "./MemberList";
+import TrainerTeamView from "./TrainerTeamView";
 import {
   Users,
   UserCheck,
@@ -22,10 +23,11 @@ import {
   Utensils,
   Copy,
   Check,
+  Award,
 } from "lucide-react";
 
 export default function OwnerDashboard({ onOpenFollowUpModal }) {
-  const { members, checkIns, payments, settings, dietPlans = [], workoutRoutines = [], setActiveModal, theme } = useGym();
+  const { members, trainers = [], checkIns, payments, settings, dietPlans = [], workoutRoutines = [], setActiveModal, theme } = useGym();
   const [activeTab, setActiveTab] = useState("redlist"); // 'redlist' | 'renewals' | 'members' | 'dietplans' | 'addons' | 'checkins'
   const [copiedDietId, setCopiedDietId] = useState(null);
 
@@ -291,6 +293,20 @@ export default function OwnerDashboard({ onOpenFollowUpModal }) {
           </button>
 
           <button
+            onClick={() => setActiveTab("team")}
+            className={`py-3 px-3 text-xs sm:text-sm font-black border-b-2 flex items-center gap-2 transition cursor-pointer whitespace-nowrap ${
+              activeTab === "team"
+                ? "border-amber-500 text-amber-600 dark:text-amber-400"
+                : isDark
+                ? "border-transparent text-slate-400 hover:text-white"
+                : "border-transparent text-slate-600 hover:text-slate-900"
+            }`}
+          >
+            <Award className="w-4 h-4 text-amber-500" />
+            <span>Coaches & Team Roster ({trainers.length})</span>
+          </button>
+
+          <button
             onClick={() => setActiveTab("dietplans")}
             className={`py-3 px-3 text-xs sm:text-sm font-black border-b-2 flex items-center gap-2 transition cursor-pointer whitespace-nowrap ${
               activeTab === "dietplans"
@@ -343,6 +359,8 @@ export default function OwnerDashboard({ onOpenFollowUpModal }) {
         {activeTab === "renewals" && <RenewalManager />}
 
         {activeTab === "members" && <MemberList />}
+
+        {activeTab === "team" && <TrainerTeamView />}
 
         {activeTab === "dietplans" && (
           <div className="space-y-6">

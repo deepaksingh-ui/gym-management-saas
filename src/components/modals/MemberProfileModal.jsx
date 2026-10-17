@@ -655,3 +655,4 @@ export default function MemberProfileModal({ member, onClose, onEdit }) {
     </div>
   );
 }
+

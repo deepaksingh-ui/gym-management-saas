@@ -149,10 +149,10 @@ export default function NewMemberModal({ onClose }) {
                 onChange={(e) => setFormData({ ...formData, assignedTrainerId: e.target.value })}
                 className="w-full bg-neutral-950 border border-neutral-800 rounded-xl p-2.5 text-xs text-white outline-none focus:border-amber-500"
               >
-                <option value="none">General Gym Floor (No Personal Trainer)</option>
+                <option value="none">General Floor (No Personal Coach)</option>
                 {trainers.map((t) => (
                   <option key={t.id} value={t.id}>
-                    {t.name} ({t.specialty})
+                    Coach {t.name} — {t.specialty}
                   </option>
                 ))}
               </select>
@@ -160,30 +160,34 @@ export default function NewMemberModal({ onClose }) {
           </div>
 
           {/* Personal Training Add-on Option */}
-          <div className="p-3 bg-neutral-950/80 border border-neutral-800 rounded-2xl space-y-1.5">
+          <div className="p-3.5 bg-neutral-950/80 border border-neutral-800 rounded-2xl space-y-2">
             <div className="flex items-center justify-between">
               <span className="text-[11px] font-black uppercase tracking-wider text-amber-400 block">
                 🏋️ Personal Training (PT) Package
               </span>
-              <span className="text-[10px] text-neutral-400 font-bold">1-on-1 Coaching</span>
+              <span className="text-[10px] text-neutral-400 font-bold">1-on-1 Dedicated Coach</span>
             </div>
             <select
               value={ptOption}
               onChange={(e) => setPtOption(e.target.value)}
               className="w-full bg-neutral-900 border border-neutral-700 rounded-xl p-2.5 text-xs text-white outline-none focus:border-amber-500"
             >
-              <option value="none">No PT Package (Standard Gym Access Only) — ₹0</option>
+              <option value="none">No PT Package (Standard Gym Floor Access) — ₹0</option>
               <option value="pt-12">⭐ 1-on-1 PT (12 Sessions with Coach) — +₹4,999</option>
               <option value="pt-24">🏆 Elite Transformation PT (24 Sessions) — +₹8,999</option>
             </select>
           </div>
 
           {/* Nutrition & Training Assignment */}
-          <div className="p-3 bg-neutral-950/80 border border-neutral-800 rounded-2xl space-y-2.5">
-            <span className="text-[11px] font-black uppercase tracking-wider text-amber-400 block">
-              Nutrition & Workout Plan Assignment
-            </span>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div className="p-3.5 bg-neutral-950/80 border border-neutral-800 rounded-2xl space-y-3">
+            <div className="flex items-center justify-between">
+              <span className="text-[11px] font-black uppercase tracking-wider text-amber-400 block">
+                🥗 Nutrition & 🏋️ Workout Plan Assignment
+              </span>
+              <span className="text-[10px] text-neutral-400 font-bold">Team Member / Coach Split</span>
+            </div>
+
+            <div className="space-y-3">
               <div>
                 <label className="block text-xs font-semibold text-neutral-300 mb-1">
                   🥗 Assigned Diet Plan
@@ -193,18 +197,27 @@ export default function NewMemberModal({ onClose }) {
                   onChange={(e) => setFormData({ ...formData, dietPlanId: e.target.value })}
                   className="w-full bg-neutral-900 border border-neutral-700 rounded-xl p-2.5 text-xs text-white outline-none focus:border-amber-500"
                 >
-                  <option value="none">No Diet Plan (Standard Guidance)</option>
+                  <option value="none">Standard Guidance (No Diet Plan)</option>
                   {dietPlans.map((d) => (
                     <option key={d.id} value={d.id}>
                       {d.name} ({d.calories})
                     </option>
                   ))}
                 </select>
+                {dietPlans.find((d) => d.id === formData.dietPlanId) && (
+                  <div className="mt-1.5 flex items-center gap-2 text-[10px] bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-1 rounded-xl text-emerald-400 font-mono">
+                    <span>🔥 {dietPlans.find((d) => d.id === formData.dietPlanId)?.calories}</span>
+                    <span>•</span>
+                    <span>🥩 Protein: {dietPlans.find((d) => d.id === formData.dietPlanId)?.protein}</span>
+                    <span>•</span>
+                    <span>💧 Water: {dietPlans.find((d) => d.id === formData.dietPlanId)?.water}</span>
+                  </div>
+                )}
               </div>
 
               <div>
                 <label className="block text-xs font-semibold text-neutral-300 mb-1">
-                  🏋️‍♂️ Assigned Workout Routine
+                  🏋️‍♂️ Assigned Workout Routine Split
                 </label>
                 <select
                   value={formData.workoutSplitId}
@@ -218,6 +231,11 @@ export default function NewMemberModal({ onClose }) {
                     </option>
                   ))}
                 </select>
+                {workoutRoutines.find((w) => w.id === formData.workoutSplitId) && (
+                  <div className="mt-1.5 text-[10px] bg-amber-500/10 border border-amber-500/20 px-2.5 py-1 rounded-xl text-amber-300 font-medium">
+                    ✓ {workoutRoutines.find((w) => w.id === formData.workoutSplitId)?.name} ({workoutRoutines.find((w) => w.id === formData.workoutSplitId)?.schedule?.length || 5} days/week)
+                  </div>
+                )}
               </div>
             </div>
           </div>

@@ -20,9 +20,10 @@ import EditMemberModal from "../modals/EditMemberModal";
 import MemberProfileModal from "../modals/MemberProfileModal";
 
 export default function MemberList() {
-  const { members, plans, processCheckIn, togglePauseMember, setActiveModal, setActiveInvoice, payments, theme } = useGym();
+  const { members, plans, trainers = [], dietPlans = [], processCheckIn, togglePauseMember, setActiveModal, setActiveInvoice, payments, theme } = useGym();
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
+  const [trainerFilter, setTrainerFilter] = useState("all");
   const [actionMsg, setActionMsg] = useState("");
   const [editingMember, setEditingMember] = useState(null);
   const [selectedProfileMember, setSelectedProfileMember] = useState(null);
@@ -32,6 +33,9 @@ export default function MemberList() {
   const filteredMembers = members.filter((m) => {
     // Status filter
     if (statusFilter !== "all" && m.status !== statusFilter) return false;
+
+    // Trainer / Team Member filter
+    if (trainerFilter !== "all" && m.assignedTrainerId !== trainerFilter) return false;
 
     // Search filter
     if (!search.trim()) return true;
@@ -113,6 +117,25 @@ export default function MemberList() {
             <Upload className="w-4 h-4" />
             <span>Import Sheet</span>
           </button>
+
+          {/* Coach / Trainer Filter Dropdown */}
+          <select
+            value={trainerFilter}
+            onChange={(e) => setTrainerFilter(e.target.value)}
+            className={`rounded-2xl px-3 py-2 text-xs font-bold outline-none border transition-colors shrink-0 ${
+              isDark
+                ? "bg-slate-900 border-slate-800 text-amber-400 focus:border-amber-500"
+                : "bg-white border-slate-300 text-slate-800 shadow-sm focus:border-amber-500"
+            }`}
+          >
+            <option value="all">👥 All Coaches ({trainers.length})</option>
+            {trainers.map((t) => (
+              <option key={t.id} value={t.id}>
+                Coach {t.name} ({members.filter((m) => m.assignedTrainerId === t.id).length})
+              </option>
+            ))}
+            <option value="none">General Floor (Unassigned)</option>
+          </select>
         </div>
 
         <div className={`flex items-center gap-1.5 p-1 rounded-2xl border overflow-x-auto ${
@@ -147,9 +170,10 @@ export default function MemberList() {
             }`}>
               <tr>
                 <th className="py-3.5 px-4 font-bold">Athlete Details</th>
-                <th className="py-3.5 px-4 font-bold">Membership Plan</th>
+                <th className="py-3.5 px-4 font-bold">Plan & Coach</th>
+                <th className="py-3.5 px-4 font-bold">🥗 Assigned Diet</th>
                 <th className="py-3.5 px-4 font-bold">Status</th>
-                <th className="py-3.5 px-4 font-bold">Streak & Visits</th>
+                <th className="py-3.5 px-4 font-bold">Streak</th>
                 <th className="py-3.5 px-4 font-bold">Expiry Date</th>
                 <th className="py-3.5 px-4 font-bold text-right">Desk Actions</th>
               </tr>
@@ -164,6 +188,8 @@ export default function MemberList() {
               ) : (
                 filteredMembers.map((member) => {
                   const plan = plans.find((p) => p.id === member.planId);
+                  const trainer = trainers.find((t) => t.id === member.assignedTrainerId);
+                  const diet = dietPlans.find((d) => d.id === member.dietPlanId);
 
                   return (
                     <tr key={member.id} className={`transition ${isDark ? "hover:bg-slate-800/40" : "hover:bg-slate-50"}`}>
@@ -194,14 +220,43 @@ export default function MemberList() {
                         </div>
                       </td>
 
+                      {/* Plan & Coach */}
                       <td
                         className="py-3.5 px-4 cursor-pointer"
                         onClick={() => setSelectedProfileMember(member)}
                       >
                         <div className={`font-bold ${isDark ? "text-white" : "text-slate-900"}`}>{plan?.name || "Standard Plan"}</div>
-                        <div className={`text-[11px] ${isDark ? "text-slate-500" : "text-slate-500"}`}>
-                          {member.ptBalance ? `🏋️ ${member.ptBalance} PT sessions left` : "General Gym Floor"}
+                        <div className="flex flex-wrap items-center gap-1.5 mt-0.5">
+                          <span className="text-[11px] font-semibold text-amber-500">
+                            {trainer ? `Coach ${trainer.name.split(" ")[0]}` : "Floor Coach"}
+                          </span>
+                          {(member.ptBalance || 0) > 0 && (
+                            <span className="text-[10px] bg-amber-500/15 text-amber-600 dark:text-amber-400 border border-amber-500/30 px-1.5 py-0.2 rounded font-black">
+                              ⭐ {member.ptBalance} PT
+                            </span>
+                          )}
                         </div>
+                      </td>
+
+                      {/* Assigned Diet Plan */}
+                      <td
+                        className="py-3.5 px-4 cursor-pointer"
+                        onClick={() => setSelectedProfileMember(member)}
+                      >
+                        {diet ? (
+                          <div className="space-y-0.5">
+                            <span className={`font-bold text-[11px] block leading-tight ${isDark ? "text-slate-200" : "text-slate-800"}`}>
+                              {diet.name}
+                            </span>
+                            <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-mono font-bold">
+                              🔥 {diet.calories} • {diet.protein}
+                            </span>
+                          </div>
+                        ) : (
+                          <span className={`text-[11px] italic ${isDark ? "text-slate-500" : "text-slate-400"}`}>
+                            Standard Diet
+                          </span>
+                        )}
                       </td>
 
                       <td className="py-3.5 px-4">
