@@ -10,14 +10,15 @@ import {
   Copy,
   User,
   Filter,
-  Sparkles,
+  Flame,
 } from "lucide-react";
 
 export default function NoShowRedList({ onOpenFollowUpModal }) {
-  const { members, settings } = useGym();
+  const { members, settings, theme } = useGym();
   const [filterRange, setFilterRange] = useState("all"); // 'all' | '10-14' | '15-20' | '21+'
   const [copiedId, setCopiedId] = useState(null);
 
+  const isDark = theme === "dark";
   const threshold = settings.noShowThresholdDays || 10;
 
   // Filter members: Absent >= threshold, and NOT paused or already expired
@@ -40,40 +41,39 @@ export default function NoShowRedList({ onOpenFollowUpModal }) {
     );
   };
 
-  const copyText = (member) => {
-    const text = `Hey ${member.name}! Main ${settings.gymName} se bol raha hoon. Notice kiya aap pichhle ${member.absentDays} din se gym nahi aaye! Sab theek hai na? Kal kis time aa rahe hain workout ke liye? 💪`;
-    navigator.clipboard.writeText(text);
-    setCopiedId(member.id);
-    setTimeout(() => setCopiedId(null), 2500);
-  };
-
   return (
     <div className="space-y-6">
-      {/* Educational Banner for Gym Owners (Selling Point) */}
-      <div className="bg-gradient-to-r from-red-950/60 via-red-900/30 to-neutral-900 border border-red-500/30 rounded-2xl p-4 sm:p-5">
+      {/* Educational Banner for Gym Owners */}
+      <div className={`rounded-3xl p-5 border transition-all ${
+        isDark
+          ? "bg-gradient-to-r from-red-950/60 via-red-900/30 to-slate-900 border-red-500/40 shadow-xl"
+          : "bg-gradient-to-r from-red-50 via-orange-50 to-amber-50 border-red-200 shadow-sm"
+      }`}>
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div className="flex items-start gap-3">
-            <div className="p-2.5 bg-red-500/20 text-red-400 rounded-xl border border-red-500/30 shrink-0">
-              <AlertTriangle className="w-6 h-6" />
+          <div className="flex items-start gap-3.5">
+            <div className="p-3 bg-red-500/15 text-red-600 dark:text-red-400 rounded-2xl border border-red-500/30 shrink-0 shadow-sm">
+              <AlertTriangle className="w-7 h-7" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h3 className="text-base font-bold text-white m-0">
-                  Silent Churn Detector (No-Show Red List)
+                <h3 className={`text-base font-black m-0 ${isDark ? "text-white" : "text-slate-900"}`}>
+                  Silent Churn Predictor (No-Show Dropout Red List)
                 </h3>
-                <span className="bg-red-500 text-black text-xs font-black px-2 py-0.5 rounded-full">
-                  {redListMembers.length} Members At Risk
+                <span className="bg-red-500 text-white text-[10px] font-black px-2.5 py-0.5 rounded-full shadow-sm">
+                  {redListMembers.length} Athletes At Risk
                 </span>
               </div>
-              <p className="text-xs text-neutral-300 mt-1 max-w-2xl m-0 leading-relaxed">
-                Gym members chupchaap quit karne se pehle 10–15 din absent rehte hain.
-                Is Red List ke zariye aap unhe <strong>fee miss hone se pehle hi contact</strong> karke retain kar sakte hain!
+              <p className={`text-xs mt-1 max-w-2xl m-0 leading-relaxed ${isDark ? "text-slate-300" : "text-slate-600"}`}>
+                Gym members chupchaap chhodne se pehle 10–15 din gayab rehte hain.
+                Is Red List se unhe <strong>membership khatam hone se pehle hi contact</strong> karke retain karein!
               </p>
             </div>
           </div>
 
-          <div className="flex items-center gap-2 self-start sm:self-auto bg-black/40 px-3 py-2 rounded-xl border border-neutral-800 text-xs text-neutral-300">
-            <Clock className="w-4 h-4 text-amber-400" />
+          <div className={`flex items-center gap-2 self-start sm:self-auto px-3.5 py-2 rounded-2xl border text-xs font-bold ${
+            isDark ? "bg-slate-950 border-slate-800 text-slate-300" : "bg-white border-slate-200 text-slate-700 shadow-sm"
+          }`}>
+            <Clock className="w-4 h-4 text-amber-500" />
             <span>Threshold: <strong>{threshold}+ Days Absent</strong></span>
           </div>
         </div>
@@ -81,61 +81,75 @@ export default function NoShowRedList({ onOpenFollowUpModal }) {
 
       {/* Filter Tabs */}
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <div className="flex items-center gap-1.5 bg-neutral-900 p-1 rounded-xl border border-neutral-800">
+        <div className={`flex items-center gap-1.5 p-1 rounded-2xl border ${
+          isDark ? "bg-slate-900 border-slate-800" : "bg-slate-100 border-slate-200"
+        }`}>
           <button
             onClick={() => setFilterRange("all")}
-            className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition cursor-pointer ${
+            className={`px-3 py-1.5 rounded-xl text-xs font-black transition cursor-pointer ${
               filterRange === "all"
-                ? "bg-red-500 text-black"
-                : "text-neutral-400 hover:text-white"
+                ? "bg-red-500 text-white shadow-md shadow-red-500/20"
+                : isDark
+                ? "text-slate-400 hover:text-white"
+                : "text-slate-600 hover:text-slate-900"
             }`}
           >
             All At Risk ({redListMembers.length})
           </button>
           <button
             onClick={() => setFilterRange("10-14")}
-            className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition cursor-pointer ${
+            className={`px-3 py-1.5 rounded-xl text-xs font-black transition cursor-pointer ${
               filterRange === "10-14"
-                ? "bg-red-500 text-black"
-                : "text-neutral-400 hover:text-white"
+                ? "bg-red-500 text-white shadow-md shadow-red-500/20"
+                : isDark
+                ? "text-slate-400 hover:text-white"
+                : "text-slate-600 hover:text-slate-900"
             }`}
           >
             10–14 Days ({redListMembers.filter((m) => m.absentDays >= 10 && m.absentDays <= 14).length})
           </button>
           <button
             onClick={() => setFilterRange("15-20")}
-            className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition cursor-pointer ${
+            className={`px-3 py-1.5 rounded-xl text-xs font-black transition cursor-pointer ${
               filterRange === "15-20"
-                ? "bg-red-500 text-black"
-                : "text-neutral-400 hover:text-white"
+                ? "bg-red-500 text-white shadow-md shadow-red-500/20"
+                : isDark
+                ? "text-slate-400 hover:text-white"
+                : "text-slate-600 hover:text-slate-900"
             }`}
           >
             15–20 Days ({redListMembers.filter((m) => m.absentDays >= 15 && m.absentDays <= 20).length})
           </button>
           <button
             onClick={() => setFilterRange("21+")}
-            className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition cursor-pointer ${
+            className={`px-3 py-1.5 rounded-xl text-xs font-black transition cursor-pointer ${
               filterRange === "21+"
-                ? "bg-red-500 text-black"
-                : "text-neutral-400 hover:text-white"
+                ? "bg-red-500 text-white shadow-md shadow-red-500/20"
+                : isDark
+                ? "text-slate-400 hover:text-white"
+                : "text-slate-600 hover:text-slate-900"
             }`}
           >
             21+ Days Critical ({redListMembers.filter((m) => m.absentDays >= 21).length})
           </button>
         </div>
 
-        <span className="text-xs text-neutral-400">
+        <span className={`text-xs font-bold ${isDark ? "text-slate-400" : "text-slate-500"}`}>
           Showing <strong>{filtered.length}</strong> inactive members
         </span>
       </div>
 
       {/* Red-List Member Cards */}
       {filtered.length === 0 ? (
-        <div className="bg-neutral-900 border border-neutral-800 rounded-2xl p-8 text-center">
-          <CheckCircle2 className="w-12 h-12 text-emerald-400 mx-auto mb-2" />
-          <h4 className="text-sm font-bold text-white">No members currently in this range!</h4>
-          <p className="text-xs text-neutral-400 mt-1">
-            Great job! Members are either active or currently accounted for.
+        <div className={`rounded-3xl p-10 text-center border ${
+          isDark ? "bg-slate-900 border-slate-800" : "bg-white border-slate-200 shadow-sm"
+        }`}>
+          <CheckCircle2 className="w-14 h-14 text-emerald-500 mx-auto mb-3" />
+          <h4 className={`text-base font-black ${isDark ? "text-white" : "text-slate-900"}`}>
+            Great news! No athletes currently in this dropout danger zone!
+          </h4>
+          <p className={`text-xs mt-1 max-w-md mx-auto ${isDark ? "text-slate-400" : "text-slate-500"}`}>
+            Your member retention follow-up is working. All members are either active or accounted for.
           </p>
         </div>
       ) : (
@@ -147,7 +161,11 @@ export default function NoShowRedList({ onOpenFollowUpModal }) {
             return (
               <div
                 key={member.id}
-                className="bg-neutral-900/90 border border-neutral-800 hover:border-red-500/40 rounded-2xl p-4 transition-all duration-200 shadow-sm flex flex-col justify-between"
+                className={`rounded-3xl p-4 sm:p-5 border-2 transition-all flex flex-col justify-between ${
+                  isDark
+                    ? "bg-slate-900/95 border-red-500/30 hover:border-red-500 text-white shadow-lg"
+                    : "bg-white border-red-200 hover:border-red-500 text-slate-900 shadow-sm hover:shadow-md"
+                }`}
               >
                 <div>
                   {/* Card Header */}
@@ -156,37 +174,41 @@ export default function NoShowRedList({ onOpenFollowUpModal }) {
                       <img
                         src={member.avatar}
                         alt={member.name}
-                        className="w-12 h-12 rounded-xl object-cover border border-neutral-700"
+                        className={`w-12 h-12 rounded-2xl object-cover border ${isDark ? "border-slate-700" : "border-slate-200 shadow-sm"}`}
                       />
                       <div>
-                        <h4 className="text-sm font-bold text-white m-0 flex items-center gap-1.5">
+                        <h4 className={`text-sm font-black m-0 flex items-center gap-1.5 ${isDark ? "text-white" : "text-slate-900"}`}>
                           {member.name}
                         </h4>
-                        <span className="text-xs text-neutral-400 font-mono">
+                        <span className={`text-xs font-mono font-medium ${isDark ? "text-slate-400" : "text-slate-500"}`}>
                           {member.phone}
                         </span>
                       </div>
                     </div>
 
                     <div className="text-right">
-                      <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-black bg-red-500/15 text-red-400 border border-red-500/30">
+                      <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-xl text-xs font-black bg-red-500/15 text-red-600 dark:text-red-400 border border-red-500/30 shadow-sm">
                         {member.absentDays} Days Absent
                       </span>
                     </div>
                   </div>
 
                   {/* Membership Details */}
-                  <div className="mt-3.5 bg-neutral-950 p-2.5 rounded-xl border border-neutral-800/80 space-y-1.5 text-xs text-neutral-300">
+                  <div className={`mt-3.5 p-3 rounded-2xl border space-y-1.5 text-xs ${
+                    isDark ? "bg-slate-950 border-slate-800 text-slate-300" : "bg-slate-50 border-slate-200 text-slate-700"
+                  }`}>
                     <div className="flex justify-between">
-                      <span className="text-neutral-400">Last Visited:</span>
-                      <span className="font-medium text-white">{member.lastCheckIn} ({member.lastCheckInTime})</span>
+                      <span className={isDark ? "text-slate-400" : "text-slate-500"}>Last Check-in:</span>
+                      <span className="font-bold">{member.lastCheckIn} ({member.lastCheckInTime})</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-neutral-400">Plan Expiry:</span>
-                      <span className="font-medium text-white">{member.expiryDate}</span>
+                      <span className={isDark ? "text-slate-400" : "text-slate-500"}>Plan Expiry:</span>
+                      <span className="font-bold">{member.expiryDate}</span>
                     </div>
                     {member.notes && (
-                      <div className="pt-1 border-t border-neutral-800/60 text-[11px] text-neutral-400 italic">
+                      <div className={`pt-1.5 border-t text-[11px] italic ${
+                        isDark ? "border-slate-800 text-slate-400" : "border-slate-200 text-slate-500"
+                      }`}>
                         "{member.notes}"
                       </div>
                     )}
@@ -194,14 +216,16 @@ export default function NoShowRedList({ onOpenFollowUpModal }) {
 
                   {/* Follow-up Status Badge */}
                   <div className="mt-3 flex items-center justify-between text-xs">
-                    <span className="text-neutral-400 text-[11px]">Follow-up Status:</span>
+                    <span className={`text-[11px] font-bold ${isDark ? "text-slate-400" : "text-slate-500"}`}>Status:</span>
                     {member.followUpOutcome ? (
-                      <span className="px-2 py-0.5 rounded text-[11px] font-semibold bg-amber-500/15 text-amber-300 border border-amber-500/30">
+                      <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-amber-500/15 text-amber-700 dark:text-amber-300 border border-amber-500/30">
                         {member.followUpOutcome}
                         {member.lastFollowUpDate && ` (${member.lastFollowUpDate})`}
                       </span>
                     ) : (
-                      <span className="px-2 py-0.5 rounded text-[11px] font-semibold bg-neutral-800 text-neutral-400">
+                      <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold ${
+                        isDark ? "bg-slate-800 text-slate-400" : "bg-slate-100 text-slate-600 border border-slate-200"
+                      }`}>
                         Pending Contact
                       </span>
                     )}
@@ -209,13 +233,15 @@ export default function NoShowRedList({ onOpenFollowUpModal }) {
                 </div>
 
                 {/* Card Actions */}
-                <div className="mt-4 pt-3 border-t border-neutral-800/80 grid grid-cols-3 gap-2">
+                <div className={`mt-4 pt-3 border-t grid grid-cols-3 gap-2 ${
+                  isDark ? "border-slate-800" : "border-slate-200"
+                }`}>
                   {/* WhatsApp Action */}
                   <a
                     href={waLink}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center justify-center gap-1.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2 px-2 rounded-xl text-xs transition cursor-pointer shadow-sm shadow-emerald-950"
+                    className="flex items-center justify-center gap-1.5 bg-emerald-600 hover:bg-emerald-500 text-white font-black py-2.5 px-2 rounded-xl text-xs transition cursor-pointer shadow-md shadow-emerald-600/20"
                     title="Send WhatsApp recovery message"
                   >
                     <MessageCircle className="w-3.5 h-3.5" />
@@ -225,17 +251,21 @@ export default function NoShowRedList({ onOpenFollowUpModal }) {
                   {/* Direct Phone Call */}
                   <a
                     href={`tel:${member.phone}`}
-                    className="flex items-center justify-center gap-1.5 bg-neutral-800 hover:bg-neutral-700 text-white font-medium py-2 px-2 rounded-xl text-xs transition cursor-pointer"
-                    title="Call member"
+                    className={`flex items-center justify-center gap-1.5 font-bold py-2.5 px-2 rounded-xl text-xs border transition cursor-pointer ${
+                      isDark
+                        ? "bg-slate-800 hover:bg-slate-700 text-white border-slate-700"
+                        : "bg-slate-100 hover:bg-slate-200 text-slate-800 border-slate-300 shadow-sm"
+                    }`}
+                    title="Call athlete"
                   >
-                    <Phone className="w-3.5 h-3.5 text-neutral-300" />
+                    <Phone className="w-3.5 h-3.5 text-amber-500" />
                     <span>Call</span>
                   </a>
 
                   {/* Mark Outcome Modal */}
                   <button
                     onClick={() => onOpenFollowUpModal(member)}
-                    className="flex items-center justify-center gap-1 bg-amber-500/20 hover:bg-amber-500/30 text-amber-400 font-semibold py-2 px-2 rounded-xl text-xs border border-amber-500/30 transition cursor-pointer"
+                    className="flex items-center justify-center gap-1 bg-amber-500/20 hover:bg-amber-500/30 text-amber-700 dark:text-amber-300 font-black py-2.5 px-2 rounded-xl text-xs border border-amber-500/40 transition cursor-pointer"
                     title="Update follow-up outcome"
                   >
                     <CheckCircle2 className="w-3.5 h-3.5" />
@@ -250,4 +280,3 @@ export default function NoShowRedList({ onOpenFollowUpModal }) {
     </div>
   );
 }
-

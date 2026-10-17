@@ -37,6 +37,24 @@ export function GymProvider({ children }) {
   const [currentKioskToken, setCurrentKioskToken] = useState(() => "TOKEN-" + Math.floor(100000 + Math.random() * 900000));
   const [activeModal, setActiveModal] = useState(null); // 'settings' | 'newMember' | 'invoice' | 'assistedCheckin' | null
   const [activeInvoice, setActiveInvoice] = useState(null);
+  const [theme, setTheme] = useState(() => localStorage.getItem("fitzone_theme") || "light");
+
+  useEffect(() => {
+    localStorage.setItem("fitzone_theme", theme);
+    if (typeof document !== "undefined") {
+      if (theme === "dark") {
+        document.documentElement.classList.add("dark");
+        document.body.classList.add("dark");
+      } else {
+        document.documentElement.classList.remove("dark");
+        document.body.classList.remove("dark");
+      }
+    }
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme((prev) => (prev === "dark" ? "light" : "dark"));
+  };
 
   // Sync to LocalStorage
   useEffect(() => {
@@ -563,6 +581,9 @@ export function GymProvider({ children }) {
         loginAdmin,
         loginMember,
         logout,
+        theme,
+        setTheme,
+        toggleTheme,
       }}
     >
       {children}

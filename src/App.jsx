@@ -26,11 +26,14 @@ function MainContent() {
     authRole,
     logout,
     settings,
+    theme,
   } = useGym();
   const [followUpMember, setFollowUpMember] = useState(null);
   const [isScanMode, setIsScanMode] = useState(() => {
     return typeof window !== "undefined" && window.location.search.includes("action=scan_checkin");
   });
+
+  const isDark = theme === "dark";
 
   if (isScanMode) {
     return (
@@ -48,7 +51,9 @@ function MainContent() {
   // Counter Kiosk Mode (can run on dedicated tablet without login)
   if (currentView === "kiosk") {
     return (
-      <div className="min-h-screen bg-neutral-950 text-neutral-100 p-4 sm:p-6 font-sans">
+      <div className={`min-h-screen p-4 sm:p-6 font-sans transition-colors duration-200 ${
+        isDark ? "bg-[#080c14] text-white" : "bg-slate-50 text-slate-900 bg-fitness-pattern"
+      }`}>
         <CounterKiosk />
       </div>
     );
@@ -62,26 +67,30 @@ function MainContent() {
   // If Member role, render strictly Member Portal with secure header and Logout
   if (authRole === "member") {
     return (
-      <div className="min-h-screen bg-neutral-950 text-neutral-100 flex flex-col font-sans">
-        <header className="border-b border-neutral-800 bg-neutral-900/95 sticky top-0 z-40 backdrop-blur">
+      <div className={`min-h-screen flex flex-col font-sans transition-colors duration-200 ${
+        isDark ? "bg-[#080c14] text-white" : "bg-slate-50 text-slate-900 bg-fitness-pattern"
+      }`}>
+        <header className={`sticky top-0 z-40 backdrop-blur transition-colors ${
+          isDark ? "bg-slate-900/95 border-b border-slate-800 text-white" : "bg-white/95 border-b border-slate-200 text-slate-900 shadow-sm"
+        }`}>
           <div className="max-w-4xl mx-auto px-4 h-16 flex items-center justify-between">
             <div className="flex items-center gap-2.5">
-              <div className="w-9 h-9 rounded-xl bg-amber-500 flex items-center justify-center text-black font-black text-sm shadow-md shadow-amber-500/20">
+              <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-amber-500 to-orange-500 flex items-center justify-center text-black font-black text-sm shadow-md shadow-amber-500/20">
                 🏋️
               </div>
               <div>
-                <h1 className="text-sm font-black text-white m-0 leading-tight">
+                <h1 className="text-sm font-black m-0 leading-tight">
                   {settings.gymName}
                 </h1>
-                <span className="text-[10px] text-amber-400 font-bold uppercase tracking-wider">
-                  Member Digital Pass
+                <span className="text-[10px] text-amber-500 font-black uppercase tracking-wider">
+                  Athlete Digital Pass
                 </span>
               </div>
             </div>
 
             <button
               onClick={logout}
-              className="text-xs font-bold text-red-400 hover:text-white bg-neutral-800 hover:bg-neutral-700 border border-neutral-700 px-3 py-1.5 rounded-xl transition cursor-pointer"
+              className="text-xs font-bold text-red-500 hover:text-white bg-red-500/10 hover:bg-red-500 border border-red-500/25 px-3 py-1.5 rounded-xl transition cursor-pointer"
             >
               Sign Out
             </button>
@@ -106,7 +115,9 @@ function MainContent() {
   }
 
   return (
-    <div className="min-h-screen bg-neutral-950 text-neutral-100 flex flex-col font-sans">
+    <div className={`min-h-screen flex flex-col font-sans transition-colors duration-200 ${
+      isDark ? "bg-[#080c14] text-white" : "bg-slate-50 text-slate-900 bg-fitness-pattern"
+    }`}>
       <Navbar />
 
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-6">
@@ -164,10 +175,17 @@ function MainContent() {
       )}
 
       {/* Footer */}
-      <footer className="border-t border-neutral-900 bg-neutral-950 py-4 text-center text-xs text-neutral-400">
+      <footer className={`border-t py-4 text-center text-xs transition-colors ${
+        isDark ? "border-slate-800 bg-slate-950 text-slate-400" : "border-slate-200 bg-white text-slate-600 shadow-inner"
+      }`}>
         <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
-          <span>Gym Retention SaaS — Designed for Local Indian Gyms</span>
-          <span className="text-neutral-400">Based on Roy Digital Blueprint</span>
+          <div className="flex items-center gap-2">
+            <span className="font-black text-amber-500">⚡ {settings.gymName} Retention Suite</span>
+            <span className="text-[10px] bg-amber-500/15 text-amber-600 dark:text-amber-400 px-2.5 py-0.5 rounded-full font-black border border-amber-500/20">
+              ATHLETIC OS
+            </span>
+          </div>
+          <span className="font-semibold">Designed for High-Performance Indian Fitness Clubs</span>
         </div>
       </footer>
     </div>
