@@ -68,6 +68,176 @@ export const TRAINERS = [
   { id: "tr-3", name: "Kabir Khan", specialty: "Functional & Athletic Training", phone: "+91 98930 77889", rating: 4.9, activeClients: 9 },
 ];
 
+export const PRESET_DIET_PLANS = [
+  {
+    id: "diet-hypertrophy",
+    name: "Lean Muscle Hypertrophy (High Protein)",
+    calories: "2,350 kcal",
+    protein: "155g",
+    carbs: "230g",
+    fats: "55g",
+    water: "3.5 - 4 Liters",
+    preference: "High Protein / Non-Veg & Eggs",
+    meals: [
+      { name: "Meal 1 — Breakfast (08:00 AM)", items: "3 Whole Eggs + 2 Egg Whites + 60g Rolled Oats with Skimmed Milk, 1 Banana & 8 Almonds", protein: "36g" },
+      { name: "Meal 2 — Mid-Morning (11:30 AM)", items: "1 Apple / Orange + 10 Almonds & 5 Walnuts + 1 Cup Green Tea", protein: "6g" },
+      { name: "Meal 3 — High-Protein Lunch (01:30 PM)", items: "150g Grilled Chicken Breast / Tofu + 1 Bowl Brown Rice + Dal Tadka + Cucumber Salad", protein: "42g" },
+      { name: "Meal 4 — Pre-Workout Fuel (05:00 PM)", items: "1 Cup Black Coffee + 2 Whole Wheat Bread slices with 1 tbsp Peanut Butter & 1 Banana", protein: "12g" },
+      { name: "Meal 5 — Post-Workout Recovery (07:30 PM)", items: "1 Scoop FitZone 100% Whey Isolate in 250ml water + 1 Banana", protein: "27g" },
+      { name: "Meal 6 — Muscle Repair Dinner (09:30 PM)", items: "100g Paneer / Grilled Fish / Soya Chunks + 2 Multigrain Rotis + Steamed Veggies", protein: "32g" }
+    ]
+  },
+  {
+    id: "diet-fatloss",
+    name: "Rapid Fat Shred & Calorie Deficit",
+    calories: "1,750 kcal",
+    protein: "140g",
+    carbs: "135g",
+    fats: "45g",
+    water: "4 Liters",
+    preference: "Fat Loss & Cutting",
+    meals: [
+      { name: "Meal 1 — Breakfast (08:00 AM)", items: "4 Boiled Egg Whites + 1 Whole Egg + Green Salad + Black Coffee", protein: "24g" },
+      { name: "Meal 2 — Lunch (01:00 PM)", items: "150g Grilled Chicken / Soya Chunks + Large Green Bowl (Cucumber, Tomato, Spinach) + Half Bowl Brown Rice", protein: "38g" },
+      { name: "Meal 3 — Pre-Workout (05:00 PM)", items: "1 Green Apple + Espresso Shot / FitZone Pre-Workout", protein: "2g" },
+      { name: "Meal 4 — Post-Workout (07:00 PM)", items: "1 Scoop Whey Isolate in water", protein: "25g" },
+      { name: "Meal 5 — Dinner (08:30 PM)", items: "Clear Vegetable Soup + 150g Grilled Tofu or Fish + Boiled Broccoli", protein: "32g" }
+    ]
+  },
+  {
+    id: "diet-pureveg",
+    name: "Pure Vegetarian Indian Muscle Builder",
+    calories: "2,150 kcal",
+    protein: "130g",
+    carbs: "240g",
+    fats: "55g",
+    water: "3.5 Liters",
+    preference: "100% Pure Vegetarian",
+    meals: [
+      { name: "Meal 1 — Breakfast (08:00 AM)", items: "100g Paneer Bhurji + 2 Multigrain Toast + 1 Glass Skimmed Milk with Chia seeds", protein: "28g" },
+      { name: "Meal 2 — Mid-Morning (11:00 AM)", items: "1 Roasted Chana Bowl (50g) + 1 Glass Spiced Buttermilk (Chaas)", protein: "14g" },
+      { name: "Meal 3 — High-Protein Veg Lunch (01:30 PM)", items: "100g Soya Chunks Curry + 1 Bowl Thick Moong Dal + 2 Chapatis + Curd & Salad", protein: "40g" },
+      { name: "Meal 4 — Pre-Workout (05:30 PM)", items: "2 Bananas + 1 Spoon Peanut Butter + Warm Water", protein: "8g" },
+      { name: "Meal 5 — Post-Workout (07:30 PM)", items: "1 Scoop FitZone Whey Protein (or Plant Protein) in 250ml water", protein: "25g" },
+      { name: "Meal 6 — Dinner (09:00 PM)", items: "100g Grilled Paneer Tikka + Mixed Vegetable Khichdi + Cucumber Raita", protein: "25g" }
+    ]
+  }
+];
+
+export const PRESET_WORKOUT_ROUTINES = [
+  {
+    id: "split-5day-hypertrophy",
+    name: "5-Day Hypertrophy & Muscle Growth Split",
+    description: "Designed for intermediate to advanced lifters to build muscle mass and symmetry.",
+    schedule: [
+      {
+        day: "Monday",
+        muscle: "Chest & Triceps",
+        duration: "55 Mins",
+        exercises: [
+          { name: "Flat Barbell Bench Press", sets: "4 Sets", reps: "8-10 Reps", tip: "Arch upper back slightly, retract scapula, control the downward bar path." },
+          { name: "Incline Dumbbell Press", sets: "3 Sets", reps: "10-12 Reps", tip: "Focus on upper chest squeeze at top contraction." },
+          { name: "Cable Chest Flyes", sets: "3 Sets", reps: "15 Reps", tip: "Keep slight bend in elbows, feel deep chest stretch." },
+          { name: "Triceps Rope Pushdowns", sets: "4 Sets", reps: "12-15 Reps", tip: "Flare rope outward at bottom for peak tricep contraction." }
+        ]
+      },
+      {
+        day: "Tuesday",
+        muscle: "Back & Biceps",
+        duration: "55 Mins",
+        exercises: [
+          { name: "Wide-Grip Lat Pulldowns", sets: "4 Sets", reps: "10-12 Reps", tip: "Pull with elbows towards ribs, avoid excessive body swing." },
+          { name: "Seated Cable Rows", sets: "3 Sets", reps: "10-12 Reps", tip: "Squeeze shoulder blades together firmly for 1 second." },
+          { name: "Conventional Barbell Deadlifts", sets: "3 Sets", reps: "6-8 Reps", tip: "Keep spine neutral, lock out with glutes." },
+          { name: "Incline Dumbbell Bicep Curls", sets: "4 Sets", reps: "10-12 Reps", tip: "Supinate wrists outward at top for maximum peak." }
+        ]
+      },
+      {
+        day: "Wednesday",
+        muscle: "Legs & Core Conditioning",
+        duration: "60 Mins",
+        exercises: [
+          { name: "Barbell Back Squats", sets: "4 Sets", reps: "8-10 Reps", tip: "Hit parallel depth, drive feet firmly through floor." },
+          { name: "45-Degree Leg Press", sets: "3 Sets", reps: "12-15 Reps", tip: "Never lock out knees fully at the top." },
+          { name: "Lying Hamstring Leg Curls", sets: "3 Sets", reps: "12-15 Reps", tip: "Slow 2-second negative for maximum hamstring growth." },
+          { name: "Hanging Leg Raises", sets: "3 Sets", reps: "15 Reps", tip: "Curl pelvis upward, avoid swinging legs." }
+        ]
+      },
+      {
+        day: "Thursday",
+        muscle: "Shoulders, Traps & Rear Delts",
+        duration: "50 Mins",
+        exercises: [
+          { name: "Seated Overhead Dumbbell Press", sets: "4 Sets", reps: "8-10 Reps", tip: "Bring dumbbells to ear level before pressing upward." },
+          { name: "Dumbbell Lateral Raises", sets: "4 Sets", reps: "15 Reps", tip: "Lead with elbows, pause briefly at shoulder height." },
+          { name: "Cable Facepulls with Rope", sets: "3 Sets", reps: "15-20 Reps", tip: "Pull towards eyes for posture & healthy rotator cuffs." },
+          { name: "Dumbbell Shrugs", sets: "3 Sets", reps: "12 Reps", tip: "Hold top contraction for 2 seconds." }
+        ]
+      },
+      {
+        day: "Friday",
+        muscle: "Arms & Core Hypertrophy",
+        duration: "45 Mins",
+        exercises: [
+          { name: "EZ-Bar Preacher Curls", sets: "3 Sets", reps: "10-12 Reps", tip: "Full stretch at bottom, strictly isolate biceps." },
+          { name: "Overhead Dumbbell Triceps Extension", sets: "3 Sets", reps: "12 Reps", tip: "Keep elbows tucked close to head." },
+          { name: "Hammer Curls", sets: "3 Sets", reps: "12 Reps", tip: "Targets brachialis for thicker forearm & bicep look." },
+          { name: "Weighted Plank", sets: "3 Sets", reps: "60 Secs", tip: "Brace core like expecting a punch." }
+        ]
+      },
+      {
+        day: "Saturday & Sunday",
+        muscle: "Active Recovery & Mobility",
+        duration: "20-30 Mins",
+        exercises: [
+          { name: "Outdoor Brisk Walk / Light Cardio", sets: "1 Session", reps: "30 Mins", tip: "Promotes blood flow and speeds muscular recovery." },
+          { name: "Foam Rolling & Full Body Stretch", sets: "1 Session", reps: "15 Mins", tip: "Target tight hip flexors and back muscles." }
+        ]
+      }
+    ]
+  },
+  {
+    id: "split-ppl",
+    name: "Push - Pull - Legs (PPL Split)",
+    description: "Classic high-frequency 3-day or 6-day split for balanced athletic aesthetics and power.",
+    schedule: [
+      {
+        day: "Push Day",
+        muscle: "Chest, Shoulders & Triceps",
+        duration: "55 Mins",
+        exercises: [
+          { name: "Barbell Bench Press", sets: "4 Sets", reps: "6-8 Reps", tip: "Compound power movement." },
+          { name: "Standing Overhead Military Press", sets: "3 Sets", reps: "8-10 Reps", tip: "Strict core bracing." },
+          { name: "Incline Dumbbell Flyes", sets: "3 Sets", reps: "12 Reps", tip: "Deep chest stretch." },
+          { name: "Dips / Tricep Pushdown", sets: "3 Sets", reps: "12-15 Reps", tip: "Lockout triceps at bottom." }
+        ]
+      },
+      {
+        day: "Pull Day",
+        muscle: "Back, Rear Delts & Biceps",
+        duration: "55 Mins",
+        exercises: [
+          { name: "Barbell Bent-Over Row", sets: "4 Sets", reps: "8-10 Reps", tip: "Pull to lower stomach, maintain flat back." },
+          { name: "Wide-Grip Lat Pulldown", sets: "4 Sets", reps: "10 Reps", tip: "Engage lower lats with slow negative." },
+          { name: "Dumbbell Shrugs", sets: "3 Sets", reps: "12 Reps", tip: "Heavy traps overload." },
+          { name: "Barbell Bicep Curls", sets: "4 Sets", reps: "10-12 Reps", tip: "Strict form, zero torso swinging." }
+        ]
+      },
+      {
+        day: "Legs Day",
+        muscle: "Quads, Hamstrings & Calves",
+        duration: "60 Mins",
+        exercises: [
+          { name: "Barbell Back Squats", sets: "4 Sets", reps: "8-10 Reps", tip: "Full range of motion below parallel." },
+          { name: "Romanian Deadlifts (RDL)", sets: "3 Sets", reps: "10-12 Reps", tip: "Feel hamstrings stretch, keep back flat." },
+          { name: "Walking Lunges with Dumbbells", sets: "3 Sets", reps: "12 Steps/Leg", tip: "Keep chest tall." },
+          { name: "Standing Calf Raises", sets: "4 Sets", reps: "15-20 Reps", tip: "Deep stretch at bottom and hold at peak." }
+        ]
+      }
+    ]
+  }
+];
+
 export const ADD_ONS = [
   {
     id: "addon-pt-12",
@@ -168,6 +338,8 @@ export const INITIAL_MEMBERS = [
     absentDays: 0,
     notes: "Very consistent, focus on bench press progression",
     ptBalance: 6,
+    dietPlanId: "diet-hypertrophy",
+    workoutSplitId: "split-5day-hypertrophy",
   },
   // 2. Red-List Silent Churn Candidate (Absent 14 days)
   {

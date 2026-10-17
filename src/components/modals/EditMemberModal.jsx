@@ -3,7 +3,7 @@ import { useGym } from "../../context/GymContext";
 import { X, Edit2, CheckCircle2, UserCheck } from "lucide-react";
 
 export default function EditMemberModal({ member, onClose }) {
-  const { plans, trainers, updateMember } = useGym();
+  const { plans, trainers, dietPlans, workoutRoutines, updateMember } = useGym();
 
   const [formData, setFormData] = useState({
     name: member.name || "",
@@ -11,6 +11,8 @@ export default function EditMemberModal({ member, onClose }) {
     email: member.email || "",
     planId: member.planId || plans[0]?.id,
     assignedTrainerId: member.assignedTrainerId || "none",
+    dietPlanId: member.dietPlanId || "none",
+    workoutSplitId: member.workoutSplitId || "none",
     expiryDate: member.expiryDate || "",
     weeklyGoalDays: member.weeklyGoalDays || 4,
     notes: member.notes || "",
@@ -115,6 +117,51 @@ export default function EditMemberModal({ member, onClose }) {
                   </option>
                 ))}
               </select>
+            </div>
+          </div>
+
+          {/* Fitness Routine & Diet Plan Assignment */}
+          <div className="p-3 bg-neutral-950/80 border border-neutral-800 rounded-2xl space-y-3">
+            <span className="text-[11px] font-black uppercase tracking-wider text-amber-400 block">
+              Nutrition & Workout Split Assignment
+            </span>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label className="block text-xs font-semibold text-neutral-300 mb-1">
+                  🥗 Assigned Diet Plan
+                </label>
+                <select
+                  value={formData.dietPlanId}
+                  onChange={(e) => setFormData({ ...formData, dietPlanId: e.target.value })}
+                  className="w-full bg-neutral-900 border border-neutral-700 rounded-xl p-2.5 text-xs text-white outline-none focus:border-amber-500"
+                >
+                  <option value="none">No Diet Plan (Standard Guidance)</option>
+                  {dietPlans.map((d) => (
+                    <option key={d.id} value={d.id}>
+                      {d.name} ({d.calories})
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-neutral-300 mb-1">
+                  🏋️‍♂️ Assigned Workout Routine
+                </label>
+                <select
+                  value={formData.workoutSplitId}
+                  onChange={(e) => setFormData({ ...formData, workoutSplitId: e.target.value })}
+                  className="w-full bg-neutral-900 border border-neutral-700 rounded-xl p-2.5 text-xs text-white outline-none focus:border-amber-500"
+                >
+                  <option value="none">General Gym Routine</option>
+                  {workoutRoutines.map((w) => (
+                    <option key={w.id} value={w.id}>
+                      {w.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
             </div>
           </div>
 

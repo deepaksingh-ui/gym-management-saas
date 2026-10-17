@@ -7,6 +7,8 @@ import {
   INITIAL_MEMBERS,
   INITIAL_CHECKINS,
   INITIAL_PAYMENTS,
+  PRESET_DIET_PLANS,
+  PRESET_WORKOUT_ROUTINES,
 } from "../data/mockGymData";
 
 const GymContext = createContext(null);
@@ -29,6 +31,8 @@ export function GymProvider({ children }) {
   const [addOns, setAddOns] = useState(() => loadStored("fitzone_addons", ADD_ONS));
   const [plans, setPlans] = useState(() => loadStored("fitzone_plans", MEMBERSHIP_PLANS));
   const [trainers, setTrainers] = useState(() => loadStored("fitzone_trainers", TRAINERS));
+  const [dietPlans, setDietPlans] = useState(() => loadStored("fitzone_diet_plans", PRESET_DIET_PLANS));
+  const [workoutRoutines, setWorkoutRoutines] = useState(() => loadStored("fitzone_workout_routines", PRESET_WORKOUT_ROUTINES));
   
   // App navigation & persona state
   const [authRole, setAuthRole] = useState(() => localStorage.getItem("fitzone_auth_role") || null);
@@ -78,6 +82,12 @@ export function GymProvider({ children }) {
   useEffect(() => {
     localStorage.setItem("fitzone_trainers", JSON.stringify(trainers));
   }, [trainers]);
+  useEffect(() => {
+    localStorage.setItem("fitzone_diet_plans", JSON.stringify(dietPlans));
+  }, [dietPlans]);
+  useEffect(() => {
+    localStorage.setItem("fitzone_workout_routines", JSON.stringify(workoutRoutines));
+  }, [workoutRoutines]);
 
   // Sync to backend file database (gym-database.json) if server is active
   useEffect(() => {
@@ -420,6 +430,22 @@ export function GymProvider({ children }) {
       );
     }
 
+    // If Diet Plan, activate custom diet plan & workout split
+    if (item.type === "diet" || item.id === "addon-diet-plan") {
+      setMembers((prev) =>
+        prev.map((m) =>
+          m.id === memberId
+            ? {
+                ...m,
+                dietPlanId: m.dietPlanId || "diet-hypertrophy",
+                workoutSplitId: m.workoutSplitId || "split-5day-hypertrophy",
+                notes: (m.notes ? m.notes + " | " : "") + `Custom Diet Plan Activated on ${todayStr}`,
+              }
+            : m
+        )
+      );
+    }
+
     const receiptNo = "REC-SUPP-" + Math.floor(1000 + Math.random() * 9000);
     const newPayment = {
       id: "pay-" + Date.now(),
@@ -591,6 +617,10 @@ export function GymProvider({ children }) {
         addTrainer,
         updateTrainer,
         deleteTrainer,
+        dietPlans,
+        setDietPlans,
+        workoutRoutines,
+        setWorkoutRoutines,
         updateMember,
         currentView,
         setCurrentView,

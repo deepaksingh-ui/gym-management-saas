@@ -19,6 +19,9 @@ import {
   RefreshCw,
   Zap,
   Droplets,
+  Apple,
+  MessageSquare,
+  Utensils,
 } from "lucide-react";
 import UpiPaymentModal from "../modals/UpiPaymentModal";
 
@@ -30,6 +33,8 @@ export default function MemberPortal() {
     plans,
     addOns,
     trainers,
+    dietPlans = [],
+    workoutRoutines = [],
     processCheckIn,
     renewMembership,
     orderAddOn,
@@ -38,7 +43,9 @@ export default function MemberPortal() {
     theme,
   } = useGym();
 
-  const [activeTab, setActiveTab] = useState("home"); // 'home' | 'renew' | 'shop' | 'history'
+  const [activeTab, setActiveTab] = useState("home"); // 'home' | 'plan' | 'shop' | 'renew' | 'history'
+  const [planSubTab, setPlanSubTab] = useState("diet"); // 'diet' | 'routine'
+  const [selectedRoutineDay, setSelectedRoutineDay] = useState(0);
   const [isScanning, setIsScanning] = useState(false);
   const [scanMessage, setScanMessage] = useState(null);
   const [selectedPlanId, setSelectedPlanId] = useState("plan-3m");
@@ -68,6 +75,8 @@ export default function MemberPortal() {
 
   const currentPlan = plans.find((p) => p.id === member.planId) || plans[0] || { name: "Active Plan", price: 0 };
   const trainer = trainers.find((t) => t.id === member.assignedTrainerId);
+  const memberDiet = dietPlans.find((d) => d.id === member.dietPlanId) || (member.dietPlanId && member.dietPlanId !== "none" ? dietPlans[0] : null);
+  const memberRoutine = workoutRoutines.find((w) => w.id === member.workoutSplitId) || workoutRoutines[0];
 
   // Trigger QR Check-in simulation
   const handleQRScan = () => {
@@ -158,12 +167,12 @@ export default function MemberPortal() {
           </div>
 
           {/* Sub Navigation Tabs */}
-          <div className={`mt-4 grid grid-cols-4 gap-1 p-1 rounded-2xl border text-xs font-black ${
+          <div className={`mt-4 grid grid-cols-5 gap-1 p-1 rounded-2xl border text-xs font-black ${
             isDark ? "bg-slate-900 border-slate-800" : "bg-white border-slate-200 shadow-sm"
           }`}>
             <button
               onClick={() => setActiveTab("home")}
-              className={`py-2 rounded-xl transition cursor-pointer text-center ${
+              className={`py-2 rounded-xl transition cursor-pointer text-center text-[10px] sm:text-xs ${
                 activeTab === "home"
                   ? "bg-gradient-to-r from-amber-500 to-orange-500 text-black shadow-md shadow-amber-500/20"
                   : isDark
@@ -174,8 +183,32 @@ export default function MemberPortal() {
               Pass
             </button>
             <button
+              onClick={() => setActiveTab("plan")}
+              className={`py-2 rounded-xl transition cursor-pointer text-center text-[10px] sm:text-xs ${
+                activeTab === "plan"
+                  ? "bg-gradient-to-r from-amber-500 to-orange-500 text-black shadow-md shadow-amber-500/20"
+                  : isDark
+                  ? "text-slate-400 hover:text-white"
+                  : "text-slate-600 hover:text-slate-900"
+              }`}
+            >
+              Diet/Split
+            </button>
+            <button
+              onClick={() => setActiveTab("shop")}
+              className={`py-2 rounded-xl transition cursor-pointer text-center text-[10px] sm:text-xs ${
+                activeTab === "shop"
+                  ? "bg-gradient-to-r from-amber-500 to-orange-500 text-black shadow-md shadow-amber-500/20"
+                  : isDark
+                  ? "text-slate-400 hover:text-white"
+                  : "text-slate-600 hover:text-slate-900"
+              }`}
+            >
+              Store
+            </button>
+            <button
               onClick={() => setActiveTab("renew")}
-              className={`py-2 rounded-xl transition cursor-pointer text-center relative ${
+              className={`py-2 rounded-xl transition cursor-pointer text-center text-[10px] sm:text-xs relative ${
                 activeTab === "renew"
                   ? "bg-gradient-to-r from-amber-500 to-orange-500 text-black shadow-md shadow-amber-500/20"
                   : isDark
@@ -189,20 +222,8 @@ export default function MemberPortal() {
               )}
             </button>
             <button
-              onClick={() => setActiveTab("shop")}
-              className={`py-2 rounded-xl transition cursor-pointer text-center ${
-                activeTab === "shop"
-                  ? "bg-gradient-to-r from-amber-500 to-orange-500 text-black shadow-md shadow-amber-500/20"
-                  : isDark
-                  ? "text-slate-400 hover:text-white"
-                  : "text-slate-600 hover:text-slate-900"
-              }`}
-            >
-              Store
-            </button>
-            <button
               onClick={() => setActiveTab("history")}
-              className={`py-2 rounded-xl transition cursor-pointer text-center ${
+              className={`py-2 rounded-xl transition cursor-pointer text-center text-[10px] sm:text-xs ${
                 activeTab === "history"
                   ? "bg-gradient-to-r from-amber-500 to-orange-500 text-black shadow-md shadow-amber-500/20"
                   : isDark
@@ -406,7 +427,285 @@ export default function MemberPortal() {
             </div>
           )}
 
-          {/* TAB 2: RENEWAL CHECKOUT */}
+          {/* TAB 2: DIET & WORKOUT ROUTINE */}
+          {activeTab === "plan" && (
+            <div className="space-y-4">
+              {/* Header Title & Sub-toggle */}
+              <div className="flex items-center justify-between">
+                <div>
+                  <h4 className={`text-sm font-black m-0 ${isDark ? "text-white" : "text-slate-900"}`}>
+                    Nutrition & Training Split
+                  </h4>
+                  <p className={`text-[11px] m-0 ${isDark ? "text-slate-400" : "text-slate-500"}`}>
+                    Assigned by {trainer ? trainer.name : "FitZone Head Coach"}
+                  </p>
+                </div>
+              </div>
+
+              {/* Sub-Switch: Diet Plan vs Workout Routine */}
+              <div className={`grid grid-cols-2 gap-1 p-1 rounded-2xl border text-xs font-black ${
+                isDark ? "bg-slate-950 border-slate-800" : "bg-slate-100 border-slate-200"
+              }`}>
+                <button
+                  onClick={() => setPlanSubTab("diet")}
+                  className={`py-2 rounded-xl transition cursor-pointer flex items-center justify-center gap-1.5 ${
+                    planSubTab === "diet"
+                      ? "bg-emerald-500 text-black shadow-md shadow-emerald-500/20"
+                      : isDark
+                      ? "text-slate-400 hover:text-white"
+                      : "text-slate-600 hover:text-slate-900"
+                  }`}
+                >
+                  <Apple className="w-3.5 h-3.5" />
+                  <span>🥗 Diet Plan</span>
+                </button>
+                <button
+                  onClick={() => setPlanSubTab("routine")}
+                  className={`py-2 rounded-xl transition cursor-pointer flex items-center justify-center gap-1.5 ${
+                    planSubTab === "routine"
+                      ? "bg-amber-500 text-black shadow-md shadow-amber-500/20"
+                      : isDark
+                      ? "text-slate-400 hover:text-white"
+                      : "text-slate-600 hover:text-slate-900"
+                  }`}
+                >
+                  <Dumbbell className="w-3.5 h-3.5" />
+                  <span>🏋️‍♂️ Workout Split</span>
+                </button>
+              </div>
+
+              {/* SUB-VIEW 1: DIET PLAN */}
+              {planSubTab === "diet" && (
+                <div className="space-y-3">
+                  {memberDiet ? (
+                    <>
+                      {/* Diet Plan Summary Card */}
+                      <div className={`p-4 rounded-2xl border transition-all ${
+                        isDark ? "bg-slate-950 border-slate-800" : "bg-emerald-50/60 border-emerald-200"
+                      }`}>
+                        <div className="flex items-center justify-between mb-2">
+                          <span className="text-[10px] font-black uppercase tracking-wider bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 px-2.5 py-0.5 rounded-full border border-emerald-500/30">
+                            {memberDiet.preference}
+                          </span>
+                          <span className="text-xs font-bold text-slate-500 dark:text-slate-400">
+                            💧 {memberDiet.water}
+                          </span>
+                        </div>
+                        <h4 className={`text-base font-black ${isDark ? "text-white" : "text-slate-900"} m-0`}>
+                          {memberDiet.name}
+                        </h4>
+
+                        {/* Macros Grid */}
+                        <div className="grid grid-cols-4 gap-2 mt-3 text-center">
+                          <div className={`p-2 rounded-xl border ${isDark ? "bg-slate-900 border-slate-800" : "bg-white border-slate-200 shadow-sm"}`}>
+                            <span className="text-[9px] uppercase font-bold text-slate-400 block">Calories</span>
+                            <span className="text-xs font-black text-amber-500">{memberDiet.calories}</span>
+                          </div>
+                          <div className={`p-2 rounded-xl border ${isDark ? "bg-slate-900 border-slate-800" : "bg-white border-slate-200 shadow-sm"}`}>
+                            <span className="text-[9px] uppercase font-bold text-slate-400 block">Protein</span>
+                            <span className="text-xs font-black text-emerald-500">{memberDiet.protein}</span>
+                          </div>
+                          <div className={`p-2 rounded-xl border ${isDark ? "bg-slate-900 border-slate-800" : "bg-white border-slate-200 shadow-sm"}`}>
+                            <span className="text-[9px] uppercase font-bold text-slate-400 block">Carbs</span>
+                            <span className={`text-xs font-black ${isDark ? "text-white" : "text-slate-900"}`}>{memberDiet.carbs}</span>
+                          </div>
+                          <div className={`p-2 rounded-xl border ${isDark ? "bg-slate-900 border-slate-800" : "bg-white border-slate-200 shadow-sm"}`}>
+                            <span className="text-[9px] uppercase font-bold text-slate-400 block">Fats</span>
+                            <span className={`text-xs font-black ${isDark ? "text-white" : "text-slate-900"}`}>{memberDiet.fats}</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Meals Timeline */}
+                      <div className="space-y-2.5">
+                        <span className={`text-xs font-black uppercase tracking-wider block ${isDark ? "text-slate-400" : "text-slate-600"}`}>
+                          Daily Meal Schedule ({memberDiet.meals.length} Meals)
+                        </span>
+
+                        {memberDiet.meals.map((meal, idx) => (
+                          <div
+                            key={idx}
+                            className={`p-3.5 rounded-2xl border transition-all ${
+                              isDark ? "bg-slate-950 border-slate-800" : "bg-white border-slate-200 shadow-sm"
+                            }`}
+                          >
+                            <div className="flex items-center justify-between mb-1.5">
+                              <div className="flex items-center gap-2">
+                                <span className="w-5 h-5 rounded-lg bg-amber-500/15 text-amber-500 flex items-center justify-center text-[10px] font-black">
+                                  {idx + 1}
+                                </span>
+                                <span className={`text-xs font-black ${isDark ? "text-white" : "text-slate-900"}`}>
+                                  {meal.name}
+                                </span>
+                              </div>
+                              <span className="text-[10px] font-black px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 font-mono">
+                                {meal.protein}
+                              </span>
+                            </div>
+                            <p className={`text-xs m-0 leading-relaxed ${isDark ? "text-slate-300" : "text-slate-700"}`}>
+                              {meal.items}
+                            </p>
+                          </div>
+                        ))}
+                      </div>
+
+                      {/* Coach WhatsApp Support Card */}
+                      <div className={`p-4 rounded-2xl border flex items-center justify-between gap-3 ${
+                        isDark ? "bg-slate-950 border-slate-800" : "bg-slate-50 border-slate-200"
+                      }`}>
+                        <div className="flex items-center gap-2.5">
+                          <div className="w-9 h-9 rounded-xl bg-emerald-500/15 text-emerald-500 flex items-center justify-center font-bold">
+                            <MessageSquare className="w-5 h-5" />
+                          </div>
+                          <div>
+                            <span className={`text-xs font-black block ${isDark ? "text-white" : "text-slate-900"}`}>
+                              Have a diet question?
+                            </span>
+                            <span className={`text-[10px] block ${isDark ? "text-slate-400" : "text-slate-500"}`}>
+                              Ask coach {trainer ? trainer.name : "Vikram"} on WhatsApp
+                            </span>
+                          </div>
+                        </div>
+                        <a
+                          href={`https://wa.me/91${trainer ? trainer.phone.replace(/[^0-9]/g, "").slice(-10) : "9893011223"}?text=${encodeURIComponent(
+                            `Hi Coach, I am ${member.name} (Member ID: ${member.id}). I have a question regarding my FitZone diet plan.`
+                          )}`}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="px-3 py-2 bg-emerald-500 hover:bg-emerald-400 text-black font-black text-xs rounded-xl flex items-center gap-1.5 cursor-pointer shadow-sm transition"
+                        >
+                          <span>Chat</span>
+                          <ArrowRight className="w-3.5 h-3.5" />
+                        </a>
+                      </div>
+                    </>
+                  ) : (
+                    /* If no diet plan assigned */
+                    <div className={`p-6 rounded-3xl border text-center space-y-4 ${
+                      isDark ? "bg-slate-950 border-slate-800" : "bg-white border-slate-200 shadow-md"
+                    }`}>
+                      <div className="w-14 h-14 mx-auto rounded-3xl bg-amber-500/15 text-amber-500 flex items-center justify-center">
+                        <Apple className="w-7 h-7" />
+                      </div>
+                      <div>
+                        <h4 className={`text-base font-black ${isDark ? "text-white" : "text-slate-900"} m-0`}>
+                          No Active Diet Plan Assigned
+                        </h4>
+                        <p className={`text-xs mt-1 m-0 ${isDark ? "text-slate-400" : "text-slate-600"}`}>
+                          Get a tailored Indian macro & calorie meal plan designed by certified trainers for your body goals.
+                        </p>
+                      </div>
+                      <button
+                        onClick={() => handleBuyAddOn({ id: "addon-diet-plan", name: "Customized Macro & Calorie Diet Plan", price: 999 })}
+                        className="w-full py-3 bg-amber-500 hover:bg-amber-400 text-black font-black rounded-2xl text-xs flex items-center justify-center gap-2 shadow-lg shadow-amber-500/20 cursor-pointer transition"
+                      >
+                        <Sparkles className="w-4 h-4" />
+                        <span>Order Custom Diet Plan — ₹999</span>
+                      </button>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* SUB-VIEW 2: WORKOUT ROUTINE */}
+              {planSubTab === "routine" && (
+                <div className="space-y-3">
+                  {(() => {
+                    const routine = memberRoutine || workoutRoutines[0];
+                    if (!routine) return null;
+                    const currentDayItem = routine.schedule[selectedRoutineDay] || routine.schedule[0];
+
+                    return (
+                      <>
+                        <div className={`p-4 rounded-2xl border ${
+                          isDark ? "bg-slate-950 border-slate-800" : "bg-amber-50/60 border-amber-200"
+                        }`}>
+                          <div className="flex items-center justify-between mb-1">
+                            <span className="text-[10px] font-black uppercase tracking-wider bg-amber-500/20 text-amber-700 dark:text-amber-300 px-2.5 py-0.5 rounded-full border border-amber-500/30">
+                              Assigned Split
+                            </span>
+                            <span className="text-xs font-bold text-slate-500 dark:text-slate-400">
+                              ⏱️ {currentDayItem.duration}
+                            </span>
+                          </div>
+                          <h4 className={`text-sm font-black ${isDark ? "text-white" : "text-slate-900"} m-0`}>
+                            {routine.name}
+                          </h4>
+                          <p className={`text-[11px] m-0 mt-1 line-clamp-1 ${isDark ? "text-slate-400" : "text-slate-600"}`}>
+                            {routine.description}
+                          </p>
+                        </div>
+
+                        {/* Day Selector Pills */}
+                        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none">
+                          {routine.schedule.map((item, idx) => (
+                            <button
+                              key={idx}
+                              onClick={() => setSelectedRoutineDay(idx)}
+                              className={`px-3 py-1.5 rounded-xl text-xs font-black shrink-0 transition cursor-pointer ${
+                                selectedRoutineDay === idx
+                                  ? "bg-amber-500 text-black shadow-md shadow-amber-500/20"
+                                  : isDark
+                                  ? "bg-slate-900 text-slate-400 hover:text-white border border-slate-800"
+                                  : "bg-white text-slate-600 hover:text-slate-900 border border-slate-200"
+                              }`}
+                            >
+                              {item.day.split(" ")[0]}
+                            </button>
+                          ))}
+                        </div>
+
+                        {/* Day Muscle Focus */}
+                        <div className="flex items-center justify-between px-1">
+                          <span className={`text-xs font-black uppercase tracking-wider ${isDark ? "text-amber-400" : "text-amber-600"}`}>
+                            🎯 {currentDayItem.muscle}
+                          </span>
+                          <span className={`text-[10px] font-bold ${isDark ? "text-slate-500" : "text-slate-400"}`}>
+                            {currentDayItem.exercises.length} Exercises
+                          </span>
+                        </div>
+
+                        {/* Exercise Cards */}
+                        <div className="space-y-2">
+                          {currentDayItem.exercises.map((ex, exIdx) => (
+                            <div
+                              key={exIdx}
+                              className={`p-3.5 rounded-2xl border space-y-1.5 transition-all ${
+                                isDark ? "bg-slate-950 border-slate-800" : "bg-white border-slate-200 shadow-sm"
+                              }`}
+                            >
+                              <div className="flex items-center justify-between">
+                                <div className="flex items-center gap-2">
+                                  <span className="w-5 h-5 rounded-lg bg-amber-500/15 text-amber-500 flex items-center justify-center text-[10px] font-black">
+                                    {exIdx + 1}
+                                  </span>
+                                  <span className={`text-xs font-black ${isDark ? "text-white" : "text-slate-900"}`}>
+                                    {ex.name}
+                                  </span>
+                                </div>
+                                <span className="text-[10px] font-black px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-700 dark:text-amber-300 font-mono">
+                                  {ex.sets} × {ex.reps}
+                                </span>
+                              </div>
+                              {ex.tip && (
+                                <p className={`text-[11px] m-0 pl-7 leading-relaxed font-medium ${
+                                  isDark ? "text-slate-400" : "text-slate-500"
+                                }`}>
+                                  💡 <span className="italic">{ex.tip}</span>
+                                </p>
+                              )}
+                            </div>
+                          ))}
+                        </div>
+                      </>
+                    );
+                  })()}
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* TAB 3: RENEWAL CHECKOUT */}
           {activeTab === "renew" && (
             <div className="space-y-4">
               <div>
