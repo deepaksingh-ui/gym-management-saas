@@ -13,6 +13,7 @@ import InvoiceModal from "./components/modals/InvoiceModal";
 import BulkImportModal from "./components/modals/BulkImportModal";
 import ManagePlansModal from "./components/modals/ManagePlansModal";
 import ManageTrainersModal from "./components/modals/ManageTrainersModal";
+import InstallPwaModal from "./components/modals/InstallPwaModal";
 import MobileCheckinPage from "./components/member/MobileCheckinPage";
 import LoginPage from "./components/auth/LoginPage";
 
@@ -110,6 +111,10 @@ function MainContent() {
             }}
           />
         )}
+
+        {activeModal === "installPwa" && (
+          <InstallPwaModal onClose={() => setActiveModal(null)} />
+        )}
       </div>
     );
   }
@@ -172,6 +177,10 @@ function MainContent() {
             setActiveInvoice(null);
           }}
         />
+      )}
+
+      {activeModal === "installPwa" && (
+        <InstallPwaModal onClose={() => setActiveModal(null)} />
       )}
 
       {/* Footer */}

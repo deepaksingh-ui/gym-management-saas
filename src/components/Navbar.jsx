@@ -119,6 +119,21 @@ export default function Navbar() {
             <span className="md:hidden text-[11px]">+ Add</span>
           </button>
 
+          {/* Add to Home Screen (PWA) Button */}
+          <button
+            onClick={() => setActiveModal("installPwa")}
+            className={`flex items-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-1.5 sm:py-2 rounded-xl text-xs font-black border transition cursor-pointer ${
+              isDark
+                ? "bg-slate-800 hover:bg-slate-700 text-amber-400 border-amber-500/30"
+                : "bg-amber-50 hover:bg-amber-100 text-amber-700 border-amber-300"
+            }`}
+            title="Add FitZone Gym App to Mobile Home Screen (PWA)"
+          >
+            <Smartphone className="w-3.5 h-3.5 text-amber-500" />
+            <span className="hidden md:inline">📲 Install App</span>
+            <span className="md:hidden text-[11px]">📲 App</span>
+          </button>
+
           {/* Manage Plans Button (Desktop) */}
           <button
             onClick={() => setActiveModal("managePlans")}

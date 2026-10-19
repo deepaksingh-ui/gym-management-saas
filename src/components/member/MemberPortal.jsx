@@ -42,6 +42,7 @@ export default function MemberPortal() {
     settings,
     checkIns,
     theme,
+    setActiveModal,
   } = useGym();
 
   const [activeTab, setActiveTab] = useState("home"); // 'home' | 'plan' | 'shop' | 'renew' | 'history'
@@ -151,8 +152,17 @@ export default function MemberPortal() {
               </div>
             </div>
 
-            {/* Member Status Badge */}
+            {/* Member Status Badge & Install Button */}
             <div className="flex items-center gap-1.5">
+              <button
+                onClick={() => setActiveModal("installPwa")}
+                className="text-[10px] font-black px-2.5 py-1 rounded-full bg-amber-500/15 text-amber-500 hover:bg-amber-500/25 border border-amber-500/30 flex items-center gap-1 cursor-pointer transition shadow-sm"
+                title="Add FitZone App to Mobile Home Screen"
+              >
+                <span>📲</span>
+                <span>Install</span>
+              </button>
+
               <span
                 className={`text-[10px] font-black px-2.5 py-1 rounded-full uppercase tracking-wider ${
                   member.status === "active"
@@ -400,6 +410,34 @@ export default function MemberPortal() {
                   <ArrowRight className="w-4 h-4 text-red-500 shrink-0" />
                 </div>
               )}
+
+              {/* Add to Home Screen Prompt Card */}
+              <div
+                onClick={() => setActiveModal("installPwa")}
+                className={`p-3 rounded-2xl border flex items-center justify-between gap-3 cursor-pointer transition shadow-sm ${
+                  isDark
+                    ? "bg-gradient-to-r from-amber-500/10 via-slate-900 to-slate-900 border-amber-500/25 hover:border-amber-500/50"
+                    : "bg-gradient-to-r from-amber-500/10 via-amber-50/50 to-white border-amber-300 hover:border-amber-400"
+                }`}
+              >
+                <div className="flex items-center gap-2.5">
+                  <div className="w-8 h-8 rounded-xl bg-amber-500/20 text-amber-500 flex items-center justify-center font-black text-sm shrink-0">
+                    📲
+                  </div>
+                  <div>
+                    <span className={`text-xs font-black block ${isDark ? "text-amber-400" : "text-amber-700"}`}>
+                      Add Gym App to Home Screen
+                    </span>
+                    <span className={`text-[10px] m-0 ${isDark ? "text-slate-400" : "text-slate-500"}`}>
+                      Instant 1-tap pass & attendance • 0 MB storage
+                    </span>
+                  </div>
+                </div>
+                <div className="bg-amber-500 text-black text-[10px] font-black px-2.5 py-1 rounded-xl shrink-0 flex items-center gap-1 shadow-sm">
+                  <span>Install</span>
+                  <ArrowRight className="w-3 h-3" />
+                </div>
+              </div>
 
               {/* Workout Target & Motivational Fuel */}
               <div className={`p-4 rounded-2xl border transition-all ${

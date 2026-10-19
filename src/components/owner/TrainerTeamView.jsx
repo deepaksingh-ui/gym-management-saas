@@ -484,3 +484,4 @@ export default function TrainerTeamView() {
     </div>
   );
 }
+
